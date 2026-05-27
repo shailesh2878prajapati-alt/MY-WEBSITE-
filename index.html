@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MY WEBSITE - Premium</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        :root {
+            --bg-black: #0A0A0A;
+            --navy-blue: #111827;
+            --purple-glow: #7C3AED;
+            --cyan-accent: #06B6D4;
+            --text-white: #F9FAFB;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-black);
+            color: var(--text-white);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* --- Premium Background Effects --- */
+        .noise-bg {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.05"/%3E%3C/svg%3E');
+            pointer-events: none; z-index: 1;
+        }
+
+        .spotlight {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none;
+            background: radial-gradient(800px circle at var(--x) var(--y), rgba(255, 255, 255, 0.04), transparent 40%);
+            z-index: 2;
+        }
+
+        .blob { position: fixed; border-radius: 50%; filter: blur(120px); opacity: 0.4; z-index: 0; animation: float 12s infinite alternate ease-in-out; }
+        .blob-purple { background: var(--purple-glow); width: 400px; height: 400px; top: 10%; left: 20%; }
+        .blob-cyan { background: var(--cyan-accent); width: 350px; height: 350px; bottom: 10%; right: 20%; animation-duration: 15s; animation-direction: alternate-reverse; }
+
+        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(50px, 50px) scale(1.1); } }
+
+        /* --- Navbar --- */
+        nav {
+            position: fixed; top: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 20px 5%;
+            background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--glass-border); z-index: 100;
+        }
+        .logo { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 20px; letter-spacing: 1px; }
+        .nav-links { display: flex; gap: 20px; align-items: center; }
+        .nav-links button, .user-greet { background: none; border: none; color: rgba(249, 250, 251, 0.7); font-size: 14px; font-weight: 500; cursor: pointer; transition: color 0.3s; }
+        .nav-links button:hover { color: var(--text-white); }
+        .user-greet { color: var(--cyan-accent); cursor: default; font-weight: 400; }
+        .logout-btn { color: #ef4444 !important; }
+
+        /* --- Main Hero Section --- */
+        .hero-section {
+            height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; z-index: 10;
+            opacity: 0; animation: fadeIn 1.5s forwards 0.5s;
+        }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } from { opacity: 0; transform: translateY(20px); } }
+
+        .hero-section h2 { font-size: 18px; font-weight: 400; letter-spacing: 4px; color: rgba(249, 250, 251, 0.6); margin-bottom: 10px; }
+        .hero-section h1 {
+            font-family: 'Poppins', sans-serif; font-size: 5rem; font-weight: 800; letter-spacing: -2px;
+            background: linear-gradient(to right, var(--purple-glow), var(--cyan-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; line-height: 1.1;
+        }
+        .hero-section p { font-size: 1.2rem; color: rgba(249, 250, 251, 0.7); margin-bottom: 50px; }
+
+        /* --- Buttons --- */
+        .btn-container { display: flex; gap: 20px; align-items: center; }
+        .btn { padding: 12px 28px; border-radius: 50px; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; border: none; }
+        
+        .btn-login { background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-white); backdrop-filter: blur(10px); }
+        .btn-login:hover { background: rgba(255, 255, 255, 0.1); box-shadow: 0 0 20px rgba(255, 255, 255, 0.1); transform: translateY(-2px); }
+
+        .btn-signup { background: linear-gradient(135deg, var(--purple-glow), var(--cyan-accent)); color: white; box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3); }
+        .btn-signup:hover { box-shadow: 0 15px 40px rgba(6, 182, 212, 0.5); transform: translateY(-2px); }
+
+        .btn-photos { background: transparent; border: 1px solid rgba(255, 255, 255, 0.3); color: var(--text-white); }
+        .btn-photos:hover { background: rgba(255, 255, 255, 0.05); border-color: var(--text-white); transform: translateY(-2px); }
+
+        /* --- Photos Gallery Section --- */
+        .photos-section { display: none; padding: 120px 5% 50px; position: absolute; top: 0; left: 0; width: 100%; min-height: 100vh; z-index: 10; animation: fadeIn 0.8s forwards; }
+        .back-btn { background: var(--glass-bg); border: 1px solid var(--glass-border); color: white; padding: 8px 16px; border-radius: 20px; cursor: pointer; margin-bottom: 30px; display: inline-flex; align-items: center; gap: 5px; transition: all 0.3s; }
+        .back-btn:hover { background: rgba(255,255,255,0.1); }
+        .gallery-grid { column-count: 3; column-gap: 20px; }
+        .gallery-item { break-inside: avoid; margin-bottom: 20px; border-radius: 16px; overflow: hidden; background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(10px); padding: 10px; transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        .gallery-item img { width: 100%; border-radius: 10px; display: block; transition: transform 0.4s ease; }
+        .gallery-item:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-color: rgba(255, 255, 255, 0.2); }
+        .gallery-item:hover img { transform: scale(1.03); }
+
+        /* --- Auth Modal (Popups) --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10, 10, 10, 0.6); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .auth-card {
+            background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border);
+            padding: 40px; border-radius: 24px; width: 100%; max-width: 400px; text-align: center; position: relative;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4); transform: scale(0.9) translateY(20px); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .modal-overlay.active .auth-card { transform: scale(1) translateY(0); }
+
+        .auth-card h3 { font-family: 'Poppins', sans-serif; font-size: 24px; margin-bottom: 10px; font-weight: 600; }
+        .auth-card p { font-size: 14px; color: rgba(249, 250, 251, 0.5); margin-bottom: 25px; }
+
+        .input-group { position: relative; margin-bottom: 20px; text-align: left; }
+        .input-group input {
+            width: 100%; padding: 14px 16px; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border);
+            border-radius: 12px; color: white; font-size: 14px; outline: none; transition: all 0.3s;
+        }
+        .input-group input:focus { border-color: var(--cyan-accent); box-shadow: 0 0 15px rgba(6, 182, 212, 0.2); }
+
+        .auth-submit { width: 100%; padding: 14px; border-radius: 12px; border: none; background: white; color: black; font-weight: 500; font-size: 15px; cursor: pointer; margin-top: 10px; transition: all 0.3s; }
+        .auth-submit:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        .close-modal { position: absolute; top: 20px; right: 20px; background: none; border: none; color: rgba(249, 250, 251, 0.4); cursor: pointer; font-size: 20px; transition: color 0.3s; }
+        .close-modal:hover { color: white; }
+
+        .divider { display: flex; align-items: center; text-align: center; color: rgba(249, 250, 251, 0.2); font-size: 12px; margin: 20px 0; }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--glass-border); }
+        .divider:not(:empty)::before { margin-right: .5em; } .divider:not(:empty)::after { margin-left: .5em; }
+
+        .google-btn {
+            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--glass-border); background: var(--glass-bg);
+            color: white; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 14px; cursor: pointer; transition: all 0.3s;
+        }
+        .google-btn:hover { background: rgba(255,255,255,0.08); }
+    </style>
+</head>
+<body>
+    <div class="spotlight" id="spotlight"></div>
+    <div class="noise-bg"></div>
+    <div class="blob blob-purple"></div>
+    <div class="blob blob-cyan"></div>
+
+    <nav>
+        <div class="logo">MY WEBSITE</div>
+        <div class="nav-links" id="navAuthLinks">
+            <button onclick="openModal('login')">Login</button>
+            <button onclick="openModal('signup')">Sign Up</button>
+        </div>
+    </nav>
+
+    <main class="hero-section" id="hero">
+        <h2>WELCOME TO</h2>
+        <h1>MY WEBSITE</h1>
+        <p>Simple. Modern. Premium.</p>
+
+        <div class="btn-container" id="heroBtnContainer">
+            <button class="btn btn-login" onclick="openModal('login')">Login</button>
+            <button class="btn btn-signup" onclick="openModal('signup')">Sign Up</button>
+            <button class="btn btn-photos" onclick="showPhotos()">
+                <i class="ph ph-image" style="font-size: 20px;"></i> Photos
+            </button>
+        </div>
+    </main>
+
+    <section class="photos-section" id="photos">
+        <button class="back-btn" onclick="showHome()">
+            <i class="ph ph-arrow-left"></i> Back to Home
+        </button>
+        <div class="gallery-grid">
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop"></div>
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=800&auto=format&fit=crop"></div>
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=800&auto=format&fit=crop"></div>
+            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1604871000636-074fa5117945?q=80&w=800&auto=format&fit=crop"></div>
+        </div>
+    </section>
+
+    <div class="modal-overlay" id="authModal" onclick="closeModal(event)">
+        <div class="auth-card" onclick="event.stopPropagation()">
+            <button class="close-modal" id="closeModalBtn">
+                <i class="ph ph-x"></i>
+            </button>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword, 
+            updateProfile, 
+            signInWithPopup, 
+            GoogleAuthProvider, 
+            signOut, 
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // Aapka bheja hua authentic Firebase Configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyCJ75TKwCbpR-7Z0PUue-q1_NjgTaJ7Zro",
+          authDomain: "my-website-c5665.firebaseapp.com",
+          projectId: "my-website-c5665",
+          storageBucket: "my-website-c5665.firebasestorage.app",
+          messagingSenderId: "729016953744",
+          appId: "1:729016953744:web:5b93b0bc3541c4d9102115"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const googleProvider = new GoogleAuthProvider();
+
+        // Target Elements
+        const modal = document.getElementById('authModal');
+        const modalContent = document.getElementById('modalContent');
+        const navAuthLinks = document.getElementById('navAuthLinks');
+        const heroBtnContainer = document.getElementById('heroBtnContainer');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+
+        // Monitor User State (Login hai ya nahi)
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const displayName = user.displayName || "User";
+                // Navbar aur buttons badal do jab user logged in ho
+                navAuthLinks.innerHTML = `
+                    <span class="user-greet">Hi, ${displayName}</span>
+                    <button class="logout-btn" id="logoutAction">Logout</button>
+                `;
+                heroBtnContainer.innerHTML = `
+                    <button class="btn btn-photos" onclick="showPhotos()">
+                        <i class="ph ph-image" style="font-size: 20px;"></i> Photos
+                    </button>
+                `;
+                document.getElementById('logoutAction')?.addEventListener('click', () => signOut(auth));
+            } else {
+                // Default state reset karein jab logout ho
+                navAuthLinks.innerHTML = `
+                    <button id="navLoginBtn">Login</button>
+                    <button id="navSignupBtn">Sign Up</button>
+                `;
+                heroBtnContainer.innerHTML = `
+                    <button class="btn btn-login" id="heroLoginBtn">Login</button>
+                    <button class="btn btn-signup" id="heroSignupBtn">Sign Up</button>
+                    <button class="btn btn-photos" onclick="showPhotos()">
+                        <i class="ph ph-image" style="font-size: 20px;"></i> Photos
+                    </button>
+                `;
+                
+                // Add events back to dynamic elements
+                document.getElementById('navLoginBtn')?.addEventListener('click', () => openModal('login'));
+                document.getElementById('navSignupBtn')?.addEventListener('click', () => openModal('signup'));
+                document.getElementById('heroLoginBtn')?.addEventListener('click', () => openModal('login'));
+                document.getElementById('heroSignupBtn')?.addEventListener('click', () => openModal('signup'));
+            }
+        });
+
+        // Open login/signup popup dynamically
+        window.openModal = function(type) {
+            if(type === 'login') {
+                modalContent.innerHTML = `
+                    <h3>Welcome Back</h3>
+                    <p>Enter your details to access your account.</p>
+                    <div class="input-group"><input type="email" id="loginEmail" placeholder="Email Address" required></div>
+                    <div class="input-group"><input type="password" id="loginPassword" placeholder="Password" required></div>
+                    <button class="auth-submit" id="loginSubmitBtn">Sign In</button>
+                    <div class="divider">or</div>
+                    <button class="google-btn" id="googleAuthBtn"><i class="ph ph-google-logo" style="font-size:18px;"></i> Continue with Google</button>
+                `;
+                document.getElementById('loginSubmitBtn').addEventListener('click', handleEmailLogin);
+            } else {
+                modalContent.innerHTML = `
+                    <h3>Create Account</h3>
+                    <p>Get started with your premium profile today.</p>
+                    <div class="input-group"><input type="text" id="signName" placeholder="Full Name" required></div>
+                    <div class="input-group"><input type="email" id="signEmail" placeholder="Email Address" required></div>
+                    <div class="input-group"><input type="password" id="signPassword" placeholder="Password" required></div>
+                    <button class="auth-submit" id="signupSubmitBtn" style="background: linear-gradient(135deg, var(--purple-glow), var(--cyan-accent)); color: white;">Create Account</button>
+                    <div class="divider">or</div>
+                    <button class="google-btn" id="googleAuthBtn"><i class="ph ph-google-logo" style="font-size:18px;"></i> Sign up with Google</button>
+                `;
+                document.getElementById('signupSubmitBtn').addEventListener('click', handleEmailSignup);
+            }
+            document.getElementById('googleAuthBtn').addEventListener('click', handleGoogleAuth);
+            modal.classList.add('active');
+        }
+
+        // 1. Email Sign Up Handler
+        async function handleEmailSignup() {
+            const name = document.getElementById('signName').value;
+            const email = document.getElementById('signEmail').value;
+            const password = document.getElementById('signPassword').value;
+
+            if(!name || !email || !password) { alert("Please fill all fields!"); return; }
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                await updateProfile(userCredential.user, { displayName: name });
+                modal.classList.remove('active');
+            } catch (error) {
+                alert("Signup Error: " + error.message);
+            }
+        }
+
+        // 2. Email Login Handler
+        async function handleEmailLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if(!email || !password) { alert("Please fill all fields!"); return; }
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                modal.classList.remove('active');
+            } catch (error) {
+                alert("Login Error: " + error.message);
+            }
+        }
+
+        // 3. Google OAuth Login Handler
+        async function handleGoogleAuth() {
+            try {
+                await signInWithPopup(auth, googleProvider);
+                modal.classList.remove('active');
+            } catch (error) {
+                alert("Google Auth Error: " + error.message);
+            }
+        }
+
+        closeModalBtn.addEventListener('click', () => modal.classList.remove('active'));
+    </script>
+
+    <script>
+        // Spotlight cursor tracking
+        const spotlight = document.getElementById('spotlight');
+        document.addEventListener('mousemove', (e) => {
+            spotlight.style.setProperty('--x', e.clientX + 'px');
+            spotlight.style.setProperty('--y', e.clientY + 'px');
+        });
+
+        // Screen switching logic
+        const hero = document.getElementById('hero');
+        const photos = document.getElementById('photos');
+        window.showPhotos = function() { hero.style.display = 'none'; photos.style.display = 'block'; window.scrollTo({ top: 0 }); }
+        window.showHome = function() { photos.style.display = 'none'; hero.style.display = 'flex'; }
+        window.closeModal = function(e) { if(e.target === document.getElementById('authModal')) authModal.classList.remove('active'); }
+    </script>
+</body>
+</html>
