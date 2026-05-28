@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MY WEBSITE - Premium</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght=600;800&family=Playfair+Display:ital,wght=1,500&display=swap" rel="stylesheet">
     
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
@@ -18,6 +18,7 @@
             --text-white: #F9FAFB;
             --glass-bg: rgba(255, 255, 255, 0.03);
             --glass-border: rgba(255, 255, 255, 0.08);
+            --insta-neon: #E1306C;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -64,7 +65,7 @@
         /* --- Main Hero Section --- */
         .hero-section {
             height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; z-index: 10;
-            opacity: 0; animation: fadeIn 1.5s forwards 0.5s;
+            opacity: 0; animation: fadeIn 1.5s forwards 0.5s; transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 1s ease;
         }
         @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } from { opacity: 0; transform: translateY(20px); } }
 
@@ -76,16 +77,34 @@
         .hero-section p { font-size: 1.2rem; color: rgba(249, 250, 251, 0.7); margin-bottom: 50px; }
 
         /* --- Buttons --- */
-        .btn-container { display: flex; gap: 20px; align-items: center; }
+        .btn-container { display: flex; gap: 20px; align-items: center; justify-content: center; flex-wrap: wrap; position: relative; z-index: 25 !important; }
         .btn { padding: 12px 28px; border-radius: 50px; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; border: none; }
         
-        .btn-login { background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-white); backdrop-filter: blur(10px); }
+        .btn-login { background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-white); backdrop-filter: blur(10px); position: relative; z-index: 30; }
         .btn-login:hover { background: rgba(255, 255, 255, 0.1); box-shadow: 0 0 20px rgba(255, 255, 255, 0.1); transform: translateY(-2px); }
 
-        .btn-signup { background: linear-gradient(135deg, var(--purple-glow), var(--cyan-accent)); color: white; box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3); }
+        .btn-signup { background: linear-gradient(135deg, var(--purple-glow), var(--cyan-accent)); color: white; box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3); position: relative; z-index: 30; }
         .btn-signup:hover { box-shadow: 0 15px 40px rgba(6, 182, 212, 0.5); transform: translateY(-2px); }
 
-        .btn-photos { background: transparent; border: 1px solid rgba(255, 255, 255, 0.3); color: var(--text-white); }
+        .btn-explore { 
+            background: rgba(6, 182, 212, 0.04); 
+            border: 2px solid rgba(6, 182, 212, 0.4); 
+            color: #fff; 
+            padding: 14px 40px; 
+            font-size: 17px; 
+            font-weight: 600; 
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 20px rgba(6, 182, 212, 0.1);
+            position: relative; z-index: 30;
+        }
+        .btn-explore:hover { 
+            background: rgba(6, 182, 212, 0.1); 
+            border-color: var(--cyan-accent); 
+            transform: translateY(-3px) scale(1.02); 
+            box-shadow: 0 10px 30px rgba(6, 182, 212, 0.3); 
+        }
+
+        .btn-photos { background: transparent; border: 1px solid rgba(255, 255, 255, 0.3); color: var(--text-white); position: relative; z-index: 30; }
         .btn-photos:hover { background: rgba(255, 255, 255, 0.05); border-color: var(--text-white); transform: translateY(-2px); }
 
         /* --- Photos Gallery Section --- */
@@ -98,7 +117,7 @@
         .gallery-item:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-color: rgba(255, 255, 255, 0.2); }
         .gallery-item:hover img { transform: scale(1.03); }
 
-        /* --- Auth Modal (Popups) --- */
+        /* --- Auth Modal --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(10, 10, 10, 0.6); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
@@ -138,10 +157,98 @@
             color: white; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 14px; cursor: pointer; transition: all 0.3s;
         }
         .google-btn:hover { background: rgba(255,255,255,0.08); }
+
+        /* --- CINEMATIC EXPLORE INTERFACE --- */
+        .cinematic-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000;
+            z-index: 500; opacity: 0; pointer-events: none; transition: opacity 1.5s ease;
+            display: flex; justify-content: center; align-items: center; overflow: hidden;
+        }
+        .cinematic-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .cine-gradient {
+            position: absolute; width: 200%; height: 200%; top: -50%; left: -50%;
+            background: radial-gradient(circle at 30% 30%, rgba(124, 58, 237, 0.12), transparent 40%),
+                        radial-gradient(circle at 70% 80%, rgba(6, 182, 212, 0.12), transparent 45%);
+            z-index: 1; animation: ambientMove 25s infinite alternate ease-in-out;
+            transform: scale(1); transition: transform 20s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .cinematic-overlay.active .cine-gradient { animation: ambientMove 25s infinite alternate ease-in-out, cinematicZoom 45s forwards linear; }
+
+        @keyframes ambientMove {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(8%, 10%) rotate(10deg); }
+        }
+        @keyframes cinematicZoom { to { transform: scale(1.15) translate(4%, 5%); } }
+
+        .abstract-shape {
+            position: absolute; background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.03);
+            backdrop-filter: blur(8px); border-radius: 24px; pointer-events: none; z-index: 2;
+            animation: floatShape 20s infinite alternate ease-in-out;
+        }
+        .shape-1 { width: 220px; height: 340px; top: 15%; left: -5%; transform: rotate(15deg); }
+        .shape-2 { width: 300px; height: 200px; bottom: 10%; right: -8%; transform: rotate(-20deg); animation-duration: 25s; }
+
+        @keyframes floatShape {
+            0% { transform: translateY(0) rotate(var(--r, 15deg)) translateX(0); }
+            100% { transform: translateY(-30px) rotate(calc(var(--r, 15deg) + 5deg)) translateX(15px); }
+        }
+
+        #particleCanvas { position: absolute; top:0; left:0; width:100%; height:100%; z-index: 2; pointer-events: none; opacity: 0.6; }
+
+        .quote-wrapper { position: relative; max-width: 800px; width: 90%; text-align: center; z-index: 10; padding: 0 20px; }
+        .quote-text {
+            font-family: 'Inter', sans-serif; font-weight: 300; font-size: 2.2rem; line-height: 1.5;
+            color: rgba(255, 255, 255, 0.95); margin-bottom: 25px; min-height: 120px; letter-spacing: -0.5px;
+            text-shadow: 0 0 40px rgba(255,255,255,0.1);
+        }
+        .quote-author { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.3rem; color: rgba(255, 255, 255, 0.5); opacity: 0; transition: opacity 0.8s ease; }
+        .quote-author.visible { opacity: 1; }
+
+        .cursor-blink::after { content: '|'; animation: blink 0.8s infinite; color: var(--cyan-accent); font-weight: bold; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* --- 🔒 ULTIMATE GLITCH FIX CORE STYLING --- */
+        .profile-card-grand {
+            background: rgba(255, 255, 255, 0.01); border: 1px solid var(--glass-border);
+            padding: 45px 60px; border-radius: 28px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.7); text-align: center; 
+            opacity: 0; transform: scale(0.95); transition: opacity 0.8s ease, transform 0.8s ease; 
+            position: absolute; display: none !important; pointer-events: none !important; z-index: -10 !important;
+        }
+        .profile-card-grand.visible { 
+            display: block !important; 
+            opacity: 1 !important; 
+            transform: scale(1) !important; 
+            pointer-events: auto !important; 
+            z-index: 600 !important; 
+        }
+        .profile-card-grand h4 { font-size: 13px; font-weight: 400; letter-spacing: 6px; color: rgba(255,255,255,0.4); margin-bottom: 15px; }
+        .profile-card-grand h3 { font-family: 'Poppins', sans-serif; font-size: 2.5rem; font-weight: 800; background: linear-gradient(to right, #fff, rgba(255,255,255,0.6)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 25px; letter-spacing: -1px; }
+        
+        .insta-handle-link {
+            display: inline-flex; align-items: center; gap: 10px; padding: 12px 28px; border-radius: 50px;
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+            color: #fff; font-size: 16px; font-weight: 500; text-decoration: none; transition: all 0.4s ease;
+        }
+        .insta-handle-link i { color: rgba(255,255,255,0.6); transition: color 0.4s; }
+        .insta-handle-link:hover {
+            border-color: var(--insta-neon); box-shadow: 0 0 30px rgba(225, 48, 108, 0.4);
+            background: rgba(225, 48, 108, 0.05); transform: translateY(-3px);
+        }
+        .insta-handle-link:hover i { color: var(--insta-neon); text-shadow: 0 0 15px var(--insta-neon); }
+
+        .cine-controls { position: absolute; top: 30px; right: 5%; z-index: 700; display: flex; gap: 15px; align-items: center; }
+        .cine-btn {
+            background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); color: rgba(255,255,255,0.6);
+            width: 44px; height: 44px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            cursor: pointer; backdrop-filter: blur(10px); transition: all 0.3s; font-size: 18px;
+        }
+        .cine-btn:hover { background: rgba(255,255,255,0.1); color: #fff; transform: scale(1.05); }
     </style>
 </head>
 <body>
-    <div class="spotlight" id="spotlight"></div>
+        <div class="spotlight" id="spotlight"></div>
     <div class="noise-bg"></div>
     <div class="blob blob-purple"></div>
     <div class="blob blob-cyan"></div>
@@ -180,6 +287,41 @@
         </div>
     </section>
 
+    <div class="cinematic-overlay" id="cineOverlay">
+        <div class="cine-gradient"></div>
+        <div class="abstract-shape shape-1"></div>
+        <div class="abstract-shape shape-2" style="--r:-20deg;"></div>
+        
+        <canvas id="particleCanvas"></canvas>
+
+        <div class="cine-controls">
+            <button class="cine-btn" id="audioToggleBtn" title="Toggle Ambient Music">
+                <i class="ph ph-speaker-slash" id="audioIcon"></i>
+            </button>
+            
+            <button class="cine-btn" onclick="skipToGrandFinale()" title="Skip Quotes" style="font-size: 13px; font-family: 'Inter', sans-serif; width: auto; padding: 0 18px; border-radius: 20px; font-weight: 500; color: #fff; background: rgba(255,255,255,0.06);">
+                Skip
+            </button>
+            
+            <button class="cine-btn" onclick="closeCinematicMode()" title="Exit Presentation">
+                <i class="ph ph-x"></i>
+            </button>
+        </div>
+
+        <div class="quote-wrapper" id="quoteWrapper">
+            <div class="quote-text cursor-blink" id="targetQuote"></div>
+            <div class="quote-author" id="targetAuthor"></div>
+        </div>
+
+        <div class="profile-card-grand" id="grandProfileCard">
+            <h4>CREATED BY</h4>
+            <h3>SHAILESH PRAJAPATI</h3>
+            <a href="https://instagram.com/shailesh_14_" target="_blank" class="insta-handle-link">
+                <i class="ph ph-instagram-logo" style="font-size: 22px;"></i> @shailesh_14_
+            </a>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="authModal" onclick="closeModal(event)">
         <div class="auth-card" onclick="event.stopPropagation()">
             <button class="close-modal" id="closeModalBtn">
@@ -188,6 +330,8 @@
             <div id="modalContent"></div>
         </div>
     </div>
+
+    <audio id="ambientMusic" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3"></audio>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -202,7 +346,6 @@
             onAuthStateChanged 
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        // Aapka bheja hua authentic Firebase Configuration
         const firebaseConfig = {
           apiKey: "AIzaSyCJ75TKwCbpR-7Z0PUue-q1_NjgTaJ7Zro",
           authDomain: "my-website-c5665.firebaseapp.com",
@@ -212,23 +355,19 @@
           appId: "1:729016953744:web:5b93b0bc3541c4d9102115"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const googleProvider = new GoogleAuthProvider();
 
-        // Target Elements
         const modal = document.getElementById('authModal');
         const modalContent = document.getElementById('modalContent');
         const navAuthLinks = document.getElementById('navAuthLinks');
         const heroBtnContainer = document.getElementById('heroBtnContainer');
         const closeModalBtn = document.getElementById('closeModalBtn');
 
-        // Monitor User State (Login hai ya nahi)
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 const displayName = user.displayName || "User";
-                // Navbar aur buttons badal do jab user logged in ho
                 navAuthLinks.innerHTML = `
                     <span class="user-greet">Hi, ${displayName}</span>
                     <button class="logout-btn" id="logoutAction">Logout</button>
@@ -240,12 +379,12 @@
                 `;
                 document.getElementById('logoutAction')?.addEventListener('click', () => signOut(auth));
             } else {
-                // Default state reset karein jab logout ho
                 navAuthLinks.innerHTML = `
                     <button id="navLoginBtn">Login</button>
                     <button id="navSignupBtn">Sign Up</button>
                 `;
                 heroBtnContainer.innerHTML = `
+                    <button class="btn btn-explore" onclick="startCinematicMode()">Explore</button>
                     <button class="btn btn-login" id="heroLoginBtn">Login</button>
                     <button class="btn btn-signup" id="heroSignupBtn">Sign Up</button>
                     <button class="btn btn-photos" onclick="showPhotos()">
@@ -253,7 +392,6 @@
                     </button>
                 `;
                 
-                // Add events back to dynamic elements
                 document.getElementById('navLoginBtn')?.addEventListener('click', () => openModal('login'));
                 document.getElementById('navSignupBtn')?.addEventListener('click', () => openModal('signup'));
                 document.getElementById('heroLoginBtn')?.addEventListener('click', () => openModal('login'));
@@ -261,7 +399,6 @@
             }
         });
 
-        // Open login/signup popup dynamically
         window.openModal = function(type) {
             if(type === 'login') {
                 modalContent.innerHTML = `
@@ -291,63 +428,230 @@
             modal.classList.add('active');
         }
 
-        // 1. Email Sign Up Handler
         async function handleEmailSignup() {
             const name = document.getElementById('signName').value;
             const email = document.getElementById('signEmail').value;
             const password = document.getElementById('signPassword').value;
-
             if(!name || !email || !password) { alert("Please fill all fields!"); return; }
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 await updateProfile(userCredential.user, { displayName: name });
                 modal.classList.remove('active');
-            } catch (error) {
-                alert("Signup Error: " + error.message);
-            }
+            } catch (error) { alert("Signup Error: " + error.message); }
         }
 
-        // 2. Email Login Handler
         async function handleEmailLogin() {
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
-
             if(!email || !password) { alert("Please fill all fields!"); return; }
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-                modal.classList.remove('active');
-            } catch (error) {
-                alert("Login Error: " + error.message);
-            }
+            try { await signInWithEmailAndPassword(auth, email, password); modal.classList.remove('active'); } catch (error) { alert("Login Error: " + error.message); }
         }
 
-        // 3. Google OAuth Login Handler
         async function handleGoogleAuth() {
-            try {
-                await signInWithPopup(auth, googleProvider);
-                modal.classList.remove('active');
-            } catch (error) {
-                alert("Google Auth Error: " + error.message);
-            }
+            try { await signInWithPopup(auth, googleProvider); modal.classList.remove('active'); } catch (error) { alert("Google Auth Error: " + error.message); }
         }
 
         closeModalBtn.addEventListener('click', () => modal.classList.remove('active'));
     </script>
 
     <script>
-        // Spotlight cursor tracking
         const spotlight = document.getElementById('spotlight');
         document.addEventListener('mousemove', (e) => {
             spotlight.style.setProperty('--x', e.clientX + 'px');
             spotlight.style.setProperty('--y', e.clientY + 'px');
         });
 
-        // Screen switching logic
         const hero = document.getElementById('hero');
         const photos = document.getElementById('photos');
         window.showPhotos = function() { hero.style.display = 'none'; photos.style.display = 'block'; window.scrollTo({ top: 0 }); }
         window.showHome = function() { photos.style.display = 'none'; hero.style.display = 'flex'; }
         window.closeModal = function(e) { if(e.target === document.getElementById('authModal')) authModal.classList.remove('active'); }
+
+        /* --- CINEMATIC QUOTES ENGINE GENERATOR --- */
+        const quotesList = [
+            { text: "The only place where success comes before work is in the dictionary.", author: "Vidal Sassoon" },
+            { text: "You don’t have to see the whole staircase, just take the first step.", author: "Martin Luther King Jr." },
+            { text: "Success is how high you bounce when you hit bottom.", author: "George S. Patton" },
+            { text: "The best time to plant a tree was 20 years ago. The second best time is now.", author: "Chinese Proverb" },
+            { text: "It always seems impossible until it’s done.", author: "Nelson Mandela" },
+            { text: "Do what you can, with what you have, where you are.", author: "Theodore Roosevelt" },
+            { text: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
+            { text: "Action breeds confidence and courage. If you want to conquer fear, do not sit at home and think about it.", author: "Dale Carnegie" },
+            { text: "We become what we think about.", author: "Earl Nightingale" },
+            { text: "Whatever the mind of man can conceive and believe, it can achieve.", author: "Napoleon Hill" }
+        ];
+
+        let currentQuoteIndex = 0;
+        let typewriterTimeout;
+        const cineOverlay = document.getElementById('cineOverlay');
+        const targetQuote = document.getElementById('targetQuote');
+        const targetAuthor = document.getElementById('targetAuthor');
+        const grandProfileCard = document.getElementById('grandProfileCard');
+        const quoteWrapper = document.getElementById('quoteWrapper');
+        
+        const audio = document.getElementById('ambientMusic');
+        const audioToggleBtn = document.getElementById('audioToggleBtn');
+        const audioIcon = document.getElementById('audioIcon');
+        let isMusicPlaying = false;
+
+        audioToggleBtn.addEventListener('click', () => {
+            if (isMusicPlaying) {
+                audio.pause();
+                audioIcon.className = "ph ph-speaker-slash";
+            } else {
+                audio.play().catch(e => console.log("Audio playing issue handled"));
+                audioIcon.className = "ph ph-speaker-high";
+            }
+            isMusicPlaying = !isMusicPlaying;
+        });
+
+        window.startCinematicMode = function() {
+            hero.style.transform = "scale(0.95)";
+            hero.style.opacity = "0";
+            
+            setTimeout(() => {
+                cineOverlay.classList.add('active');
+                currentQuoteIndex = 0;
+                grandProfileCard.className = "profile-card-grand"; // Reset styles completely
+                quoteWrapper.style.display = "block";
+                quoteWrapper.style.opacity = "1";
+                startParticleEngine();
+                if(isMusicPlaying) audio.play();
+                setTimeout(renderNextQuote, 800);
+            }, 400);
+        }
+
+        // GLITCH FIX LAYER 2: Ensure Instagram Card is brutally blocked on exit
+        window.closeCinematicMode = function() {
+            cineOverlay.classList.remove('active');
+            grandProfileCard.className = "profile-card-grand"; 
+            hero.style.transform = "scale(1)";
+            hero.style.opacity = "1";
+            clearTimeout(typewriterTimeout);
+            audio.pause();
+            isMusicPlaying = false;
+            audioIcon.className = "ph ph-speaker-slash";
+            stopParticleEngine();
+        }
+
+        // GLITCH FIX LAYER 3: Handle card render states seamlessly upon clicking Skip
+        window.skipToGrandFinale = function() {
+            clearTimeout(typewriterTimeout);
+            smoothDissolveQuote(() => {
+                quoteWrapper.style.display = "none";
+                grandProfileCard.classList.add('visible');
+            });
+        }
+
+        function renderNextQuote() {
+            if (currentQuoteIndex >= quotesList.length) {
+                smoothDissolveQuote(() => {
+                    quoteWrapper.style.display = "none";
+                    grandProfileCard.classList.add('visible');
+                });
+                return;
+            }
+
+            const currentQuote = quotesList[currentQuoteIndex];
+            targetAuthor.classList.remove('visible');
+            targetQuote.classList.add('cursor-blink');
+            
+            let charIndex = 0;
+            targetQuote.textContent = "";
+
+            function typeLetter() {
+                if (charIndex < currentQuote.text.length) {
+                    targetQuote.textContent += currentQuote.text.charAt(charIndex);
+                    charIndex++;
+                    typewriterTimeout = setTimeout(typeLetter, 45);
+                } else {
+                    targetQuote.classList.remove('cursor-blink');
+                    targetAuthor.textContent = `— ${currentQuote.author}`;
+                    targetAuthor.classList.add('visible');
+
+                    currentQuoteIndex++;
+                    typewriterTimeout = setTimeout(() => {
+                        smoothDissolveQuote(() => {
+                            setTimeout(renderNextQuote, 600);
+                        });
+                    }, 4000);
+                }
+            }
+            typeLetter();
+        }
+
+        function smoothDissolveQuote(callback) {
+            targetQuote.style.transition = "opacity 0.8s ease, transform 0.8s ease";
+            targetAuthor.style.transition = "opacity 0.8s ease";
+            targetQuote.style.opacity = "0";
+            targetQuote.style.transform = "translateY(-5px)";
+            targetAuthor.style.opacity = "0";
+
+            setTimeout(() => {
+                targetQuote.textContent = "";
+                targetAuthor.textContent = "";
+                targetQuote.style.opacity = "1";
+                targetQuote.style.transform = "translateY(0)";
+                targetQuote.style.transition = "none";
+                targetAuthor.style.transition = "opacity 0.8s ease";
+                callback();
+            }, 800);
+        }
+
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let animationFrameId;
+        let particlesArray = [];
+
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.5 + 0.5;
+                this.speedX = Math.random() * 0.2 - 0.1;
+                this.speedY = Math.random() * -0.4 - 0.1;
+                this.alpha = Math.random() * 0.5 + 0.2;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.y < 0) { this.y = canvas.height; this.x = Math.random() * canvas.width; }
+                if (this.x < 0 || this.x > canvas.width) { this.x = Math.random() * canvas.width; }
+            }
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = '#06B6D4';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function startParticleEngine() {
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            particlesArray = [];
+            for (let i = 0; i < 65; i++) { particlesArray.push(new Particle()); }
+            
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = 0; i < particlesArray.length; i++) {
+                    particlesArray[i].update();
+                    particlesArray[i].draw();
+                }
+                animationFrameId = requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        function stopParticleEngine() {
+            cancelAnimationFrame(animationFrameId);
+            window.removeEventListener('resize', resizeCanvas);
+        }
     </script>
 </body>
 </html>
