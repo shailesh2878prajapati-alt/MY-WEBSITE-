@@ -3,22 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MY WEBSITE - Premium</title>
+    <title>FUN ZONE - Premium Chat</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght=600;800&family=Playfair+Display:ital,wght=1,500&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght=600;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <style>
         :root {
             --bg-black: #0A0A0A;
-            --navy-blue: #111827;
             --purple-glow: #7C3AED;
             --cyan-accent: #06B6D4;
             --text-white: #F9FAFB;
             --glass-bg: rgba(255, 255, 255, 0.03);
             --glass-border: rgba(255, 255, 255, 0.08);
-            --insta-neon: #E1306C;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -44,7 +41,11 @@
             z-index: 2;
         }
 
-        .blob { position: fixed; border-radius: 50%; filter: blur(120px); opacity: 0.4; z-index: 0; animation: float 12s infinite alternate ease-in-out; }
+        .blob { 
+            position: fixed; border-radius: 50%; filter: blur(120px); opacity: 0.4; z-index: 0; 
+            animation: float 12s infinite alternate ease-in-out; 
+            will-change: transform; 
+        }
         .blob-purple { background: var(--purple-glow); width: 400px; height: 400px; top: 10%; left: 20%; }
         .blob-cyan { background: var(--cyan-accent); width: 350px; height: 350px; bottom: 10%; right: 20%; animation-duration: 15s; animation-direction: alternate-reverse; }
 
@@ -55,7 +56,7 @@
             position: fixed; top: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 20px 5%;
             background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--glass-border); z-index: 100;
         }
-        .logo { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 20px; letter-spacing: 1px; }
+        .logo { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 22px; letter-spacing: 2px; background: linear-gradient(to right, #fff, rgba(255,255,255,0.7)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .nav-links { display: flex; gap: 20px; align-items: center; }
         .nav-links button, .user-greet { background: none; border: none; color: rgba(249, 250, 251, 0.7); font-size: 14px; font-weight: 500; cursor: pointer; transition: color 0.3s; }
         .nav-links button:hover { color: var(--text-white); }
@@ -65,70 +66,143 @@
         /* --- Main Hero Section --- */
         .hero-section {
             height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; z-index: 10;
-            opacity: 0; animation: fadeIn 1.5s forwards 0.5s; transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 1s ease;
+            opacity: 1; transition: all 0.5s ease; will-change: transform, opacity;
         }
-        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } from { opacity: 0; transform: translateY(20px); } }
-
-        .hero-section h2 { font-size: 18px; font-weight: 400; letter-spacing: 4px; color: rgba(249, 250, 251, 0.6); margin-bottom: 10px; }
+        .hero-section h2 { font-size: 16px; font-weight: 400; letter-spacing: 6px; color: rgba(249, 250, 251, 0.5); margin-bottom: 12px; }
         .hero-section h1 {
-            font-family: 'Poppins', sans-serif; font-size: 5rem; font-weight: 800; letter-spacing: -2px;
-            background: linear-gradient(to right, var(--purple-glow), var(--cyan-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; line-height: 1.1;
+            font-family: 'Poppins', sans-serif; font-size: 6rem; font-weight: 800; letter-spacing: -3px;
+            background: linear-gradient(135deg, #fff 30%, var(--cyan-accent) 70%, var(--purple-glow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; line-height: 1.1;
         }
-        .hero-section p { font-size: 1.2rem; color: rgba(249, 250, 251, 0.7); margin-bottom: 50px; }
+        .hero-section p { font-size: 1.2rem; font-weight: 300; letter-spacing: 1px; color: rgba(249, 250, 251, 0.6); margin-bottom: 50px; }
 
         /* --- Buttons --- */
-        .btn-container { display: flex; gap: 20px; align-items: center; justify-content: center; flex-wrap: wrap; position: relative; z-index: 25 !important; }
-        .btn { padding: 12px 28px; border-radius: 50px; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; border: none; }
+        .btn-container { display: flex; gap: 20px; align-items: center; justify-content: center; flex-wrap: wrap; position: relative; z-index: 25; }
+        .btn { padding: 14px 36px; border-radius: 50px; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.25s ease; display: flex; align-items: center; gap: 8px; border: none; will-change: transform; }
         
-        .btn-login { background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-white); backdrop-filter: blur(10px); position: relative; z-index: 30; }
-        .btn-login:hover { background: rgba(255, 255, 255, 0.1); box-shadow: 0 0 20px rgba(255, 255, 255, 0.1); transform: translateY(-2px); }
+        .btn-login { background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-white); backdrop-filter: blur(10px); }
+        .btn-login:hover { background: rgba(255, 255, 255, 0.1); box-shadow: 0 0 20px rgba(255, 255, 255, 0.05); transform: translateY(-2px); }
 
-        .btn-signup { background: linear-gradient(135deg, var(--purple-glow), var(--cyan-accent)); color: white; box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3); position: relative; z-index: 30; }
-        .btn-signup:hover { box-shadow: 0 15px 40px rgba(6, 182, 212, 0.5); transform: translateY(-2px); }
+        .btn-signup { background: linear-gradient(135deg, var(--purple-glow), var(--cyan-accent)); color: white; box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3); }
+        .btn-signup:hover { box-shadow: 0 15px 40px rgba(6, 182, 212, 0.4); transform: translateY(-2px); }
 
-        .btn-explore { 
-            background: rgba(6, 182, 212, 0.04); 
-            border: 2px solid rgba(6, 182, 212, 0.4); 
-            color: #fff; 
-            padding: 14px 40px; 
-            font-size: 17px; 
-            font-weight: 600; 
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 20px rgba(6, 182, 212, 0.1);
-            position: relative; z-index: 30;
+        /* --- CHAT INTERFACE --- */
+        .chat-dashboard {
+            display: none;
+            width: 92%; max-width: 1200px; height: 78vh; margin: 100px auto 20px;
+            background: rgba(255, 255, 255, 0.01); border: 1px solid var(--glass-border);
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border-radius: 24px;
+            z-index: 50; position: relative; overflow: hidden; box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+            animation: chatFadeIn 0.5s ease forwards;
         }
-        .btn-explore:hover { 
-            background: rgba(6, 182, 212, 0.1); 
-            border-color: var(--cyan-accent); 
-            transform: translateY(-3px) scale(1.02); 
-            box-shadow: 0 10px 30px rgba(6, 182, 212, 0.3); 
+        @keyframes chatFadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        .chat-container { display: flex; height: 100%; position: relative; }
+
+        /* Left Panel - Sidebar */
+        .chat-sidebar {
+            width: 32%; border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; background: rgba(0, 0, 0, 0.2); transition: all 0.3s ease;
+        }
+        .search-area { padding: 24px 20px; border-bottom: 1px solid var(--glass-border); display: flex; gap: 10px; }
+        .search-area input {
+            flex: 1; padding: 12px 16px; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border);
+            border-radius: 14px; color: white; outline: none; font-size: 14px; transition: all 0.3s;
+        }
+        .search-area input:focus { border-color: var(--cyan-accent); box-shadow: 0 0 15px rgba(6, 182, 212, 0.15); }
+        .search-btn {
+            padding: 12px 16px; background: linear-gradient(135deg, var(--purple-glow), var(--cyan-accent));
+            border: none; border-radius: 14px; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
         }
 
-        .btn-photos { background: transparent; border: 1px solid rgba(255, 255, 255, 0.3); color: var(--text-white); position: relative; z-index: 30; }
-        .btn-photos:hover { background: rgba(255, 255, 255, 0.05); border-color: var(--text-white); transform: translateY(-2px); }
+        .recent-list-title { font-size: 12px; font-weight: 600; letter-spacing: 1px; color: rgba(255,255,255,0.3); padding: 15px 20px 5px; text-transform: uppercase; }
+        .chat-list { flex: 1; overflow-y: auto; padding: 10px; }
+        
+        .chat-user-item {
+            display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 16px; cursor: pointer; transition: all 0.25s; margin-bottom: 6px; border: 1px solid transparent;
+        }
+        .chat-user-item:hover { background: rgba(255, 255, 255, 0.03); }
+        .chat-user-item.active { background: rgba(6, 182, 212, 0.06); border-color: rgba(6, 182, 212, 0.15); }
+        
+        .user-avatar-mock {
+            width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border);
+            display: flex; justify-content: center; align-items: center; color: var(--cyan-accent); font-size: 20px; flex-shrink: 0;
+        }
+        .chat-user-item.active .user-avatar-mock { color: #fff; background: var(--cyan-accent); }
+        .user-meta h4 { font-size: 14px; font-weight: 500; margin-bottom: 2px; color: #fff; text-align: left;}
+        .user-meta p { font-size: 12px; color: rgba(255,255,255,0.4); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 180px; }
 
-        /* --- Photos Gallery Section --- */
-        .photos-section { display: none; padding: 120px 5% 50px; position: absolute; top: 0; left: 0; width: 100%; min-height: 100vh; z-index: 10; animation: fadeIn 0.8s forwards; }
-        .back-btn { background: var(--glass-bg); border: 1px solid var(--glass-border); color: white; padding: 8px 16px; border-radius: 20px; cursor: pointer; margin-bottom: 30px; display: inline-flex; align-items: center; gap: 5px; transition: all 0.3s; }
-        .back-btn:hover { background: rgba(255,255,255,0.1); }
-        .gallery-grid { column-count: 3; column-gap: 20px; }
-        .gallery-item { break-inside: avoid; margin-bottom: 20px; border-radius: 16px; overflow: hidden; background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(10px); padding: 10px; transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
-        .gallery-item img { width: 100%; border-radius: 10px; display: block; transition: transform 0.4s ease; }
-        .gallery-item:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-color: rgba(255, 255, 255, 0.2); }
-        .gallery-item:hover img { transform: scale(1.03); }
+        /* Right Panel - Active Chat Screen */
+        .chat-main-screen { width: 68%; display: flex; flex-direction: column; background: rgba(0,0,0,0.05); transition: all 0.3s ease;}
+        .chat-screen-header {
+            padding: 18px 24px; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; gap: 14px;
+            background: rgba(10, 10, 10, 0.4); backdrop-filter: blur(10px);
+        }
+        .active-user-info { text-align: left; }
+        .active-user-info h3 { font-size: 16px; font-weight: 600; letter-spacing: 0.5px; }
+        .active-user-info p { font-size: 12px; color: var(--cyan-accent); opacity: 0.8; }
+
+        .mobile-back-btn {
+            display: none; background: none; border: none; color: white; font-size: 22px; cursor: pointer; align-items: center; justify-content: center; margin-right: 5px;
+        }
+
+        .chat-messages-body { flex: 1; overflow-y: auto; padding: 25px; display: flex; flex-direction: column; gap: 16px; }
+        .no-chat-placeholder { margin: auto; color: rgba(249, 250, 251, 0.3); font-size: 15px; text-align: center; font-weight: 300; }
+        
+        /* Message Bubbles */
+        .msg-bubble { max-width: 60%; padding: 14px 18px; border-radius: 20px; font-size: 14.5px; line-height: 1.45; position: relative; word-wrap: break-word; }
+        .msg-bubble.sent {
+            align-self: flex-end; background: rgba(124, 58, 237, 0.08); border: 1px solid rgba(124, 58, 237, 0.25);
+            color: #fff; border-bottom-right-radius: 4px; box-shadow: 0 8px 24px rgba(124, 58, 237, 0.1);
+        }
+        .msg-bubble.received {
+            align-self: flex-start; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border);
+            color: rgba(255,255,255,0.9); border-bottom-left-radius: 4px;
+        }
+        .msg-time { font-size: 10px; color: rgba(255,255,255,0.25); margin-top: 6px; text-align: right; display: block; }
+
+        .chat-screen-footer {
+            padding: 20px 24px; border-top: 1px solid var(--glass-border); display: flex; gap: 14px;
+            background: rgba(10, 10, 10, 0.4); backdrop-filter: blur(10px); align-items: center;
+        }
+        .chat-screen-footer input {
+            flex: 1; padding: 15px 24px; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border);
+            border-radius: 30px; color: white; outline: none; font-size: 14px; transition: all 0.3s;
+        }
+        .chat-screen-footer input:focus { border-color: var(--purple-glow); background: rgba(255,255,255,0.05); }
+        
+        .send-msg-btn {
+            height: 48px; width: 48px; background: linear-gradient(135deg, var(--purple-glow), var(--cyan-accent));
+            border: none; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 18px; transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .send-msg-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(6, 182, 212, 0.3); }
+
+        /* --- 📱 MOBILE VIEW OPTIMIZATION (ONLY CHAT SECTION) --- */
+        @media (max-width: 768px) {
+            .chat-dashboard { height: 80vh; margin: 90px auto 10px; width: 95%; }
+            .chat-sidebar { width: 100%; border-right: none; }
+            .chat-main-screen { 
+                position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+                z-index: 60; display: none; background: #0A0A0A;
+            }
+            /* When specific user chat is activated on mobile view state */
+            .chat-dashboard.mobile-active .chat-sidebar { display: none; }
+            .chat-dashboard.mobile-active .chat-main-screen { display: flex; }
+            .mobile-back-btn { display: flex; }
+            .msg-bubble { max-width: 80%; }
+        }
 
         /* --- Auth Modal --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(10, 10, 10, 0.6); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+            display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
         }
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
 
         .auth-card {
             background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border);
             padding: 40px; border-radius: 24px; width: 100%; max-width: 400px; text-align: center; position: relative;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.4); transform: scale(0.9) translateY(20px); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4); transform: scale(0.95) translateY(10px); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .modal-overlay.active .auth-card { transform: scale(1) translateY(0); }
 
@@ -138,14 +212,14 @@
         .input-group { position: relative; margin-bottom: 20px; text-align: left; }
         .input-group input {
             width: 100%; padding: 14px 16px; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border);
-            border-radius: 12px; color: white; font-size: 14px; outline: none; transition: all 0.3s;
+            border-radius: 12px; color: white; font-size: 14px; outline: none; transition: all 0.25s;
         }
         .input-group input:focus { border-color: var(--cyan-accent); box-shadow: 0 0 15px rgba(6, 182, 212, 0.2); }
 
-        .auth-submit { width: 100%; padding: 14px; border-radius: 12px; border: none; background: white; color: black; font-weight: 500; font-size: 15px; cursor: pointer; margin-top: 10px; transition: all 0.3s; }
+        .auth-submit { width: 100%; padding: 14px; border-radius: 12px; border: none; background: white; color: black; font-weight: 500; font-size: 15px; cursor: pointer; margin-top: 10px; transition: all 0.25s; }
         .auth-submit:hover { opacity: 0.9; transform: translateY(-1px); }
 
-        .close-modal { position: absolute; top: 20px; right: 20px; background: none; border: none; color: rgba(249, 250, 251, 0.4); cursor: pointer; font-size: 20px; transition: color 0.3s; }
+        .close-modal { position: absolute; top: 20px; right: 20px; background: none; border: none; color: rgba(249, 250, 251, 0.4); cursor: pointer; font-size: 20px; transition: color 0.25s; }
         .close-modal:hover { color: white; }
 
         .divider { display: flex; align-items: center; text-align: center; color: rgba(249, 250, 251, 0.2); font-size: 12px; margin: 20px 0; }
@@ -154,107 +228,19 @@
 
         .google-btn {
             width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--glass-border); background: var(--glass-bg);
-            color: white; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 14px; cursor: pointer; transition: all 0.3s;
+            color: white; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 14px; cursor: pointer; transition: all 0.25s;
         }
         .google-btn:hover { background: rgba(255,255,255,0.08); }
-
-        /* --- CINEMATIC EXPLORE INTERFACE --- */
-        .cinematic-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000;
-            z-index: 500; opacity: 0; pointer-events: none; transition: opacity 1.5s ease;
-            display: flex; justify-content: center; align-items: center; overflow: hidden;
-        }
-        .cinematic-overlay.active { opacity: 1; pointer-events: auto; }
-
-        .cine-gradient {
-            position: absolute; width: 200%; height: 200%; top: -50%; left: -50%;
-            background: radial-gradient(circle at 30% 30%, rgba(124, 58, 237, 0.12), transparent 40%),
-                        radial-gradient(circle at 70% 80%, rgba(6, 182, 212, 0.12), transparent 45%);
-            z-index: 1; animation: ambientMove 25s infinite alternate ease-in-out;
-            transform: scale(1); transition: transform 20s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-        .cinematic-overlay.active .cine-gradient { animation: ambientMove 25s infinite alternate ease-in-out, cinematicZoom 45s forwards linear; }
-
-        @keyframes ambientMove {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            100% { transform: translate(8%, 10%) rotate(10deg); }
-        }
-        @keyframes cinematicZoom { to { transform: scale(1.15) translate(4%, 5%); } }
-
-        .abstract-shape {
-            position: absolute; background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.03);
-            backdrop-filter: blur(8px); border-radius: 24px; pointer-events: none; z-index: 2;
-            animation: floatShape 20s infinite alternate ease-in-out;
-        }
-        .shape-1 { width: 220px; height: 340px; top: 15%; left: -5%; transform: rotate(15deg); }
-        .shape-2 { width: 300px; height: 200px; bottom: 10%; right: -8%; transform: rotate(-20deg); animation-duration: 25s; }
-
-        @keyframes floatShape {
-            0% { transform: translateY(0) rotate(var(--r, 15deg)) translateX(0); }
-            100% { transform: translateY(-30px) rotate(calc(var(--r, 15deg) + 5deg)) translateX(15px); }
-        }
-
-        #particleCanvas { position: absolute; top:0; left:0; width:100%; height:100%; z-index: 2; pointer-events: none; opacity: 0.6; }
-
-        .quote-wrapper { position: relative; max-width: 800px; width: 90%; text-align: center; z-index: 10; padding: 0 20px; }
-        .quote-text {
-            font-family: 'Inter', sans-serif; font-weight: 300; font-size: 2.2rem; line-height: 1.5;
-            color: rgba(255, 255, 255, 0.95); margin-bottom: 25px; min-height: 120px; letter-spacing: -0.5px;
-            text-shadow: 0 0 40px rgba(255,255,255,0.1);
-        }
-        .quote-author { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.3rem; color: rgba(255, 255, 255, 0.5); opacity: 0; transition: opacity 0.8s ease; }
-        .quote-author.visible { opacity: 1; }
-
-        .cursor-blink::after { content: '|'; animation: blink 0.8s infinite; color: var(--cyan-accent); font-weight: bold; }
-        @keyframes blink { 50% { opacity: 0; } }
-
-        /* --- 🔒 ULTIMATE GLITCH FIX CORE STYLING --- */
-        .profile-card-grand {
-            background: rgba(255, 255, 255, 0.01); border: 1px solid var(--glass-border);
-            padding: 45px 60px; border-radius: 28px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 40px 100px rgba(0,0,0,0.7); text-align: center; 
-            opacity: 0; transform: scale(0.95); transition: opacity 0.8s ease, transform 0.8s ease; 
-            position: absolute; display: none !important; pointer-events: none !important; z-index: -10 !important;
-        }
-        .profile-card-grand.visible { 
-            display: block !important; 
-            opacity: 1 !important; 
-            transform: scale(1) !important; 
-            pointer-events: auto !important; 
-            z-index: 600 !important; 
-        }
-        .profile-card-grand h4 { font-size: 13px; font-weight: 400; letter-spacing: 6px; color: rgba(255,255,255,0.4); margin-bottom: 15px; }
-        .profile-card-grand h3 { font-family: 'Poppins', sans-serif; font-size: 2.5rem; font-weight: 800; background: linear-gradient(to right, #fff, rgba(255,255,255,0.6)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 25px; letter-spacing: -1px; }
-        
-        .insta-handle-link {
-            display: inline-flex; align-items: center; gap: 10px; padding: 12px 28px; border-radius: 50px;
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
-            color: #fff; font-size: 16px; font-weight: 500; text-decoration: none; transition: all 0.4s ease;
-        }
-        .insta-handle-link i { color: rgba(255,255,255,0.6); transition: color 0.4s; }
-        .insta-handle-link:hover {
-            border-color: var(--insta-neon); box-shadow: 0 0 30px rgba(225, 48, 108, 0.4);
-            background: rgba(225, 48, 108, 0.05); transform: translateY(-3px);
-        }
-        .insta-handle-link:hover i { color: var(--insta-neon); text-shadow: 0 0 15px var(--insta-neon); }
-
-        .cine-controls { position: absolute; top: 30px; right: 5%; z-index: 700; display: flex; gap: 15px; align-items: center; }
-        .cine-btn {
-            background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); color: rgba(255,255,255,0.6);
-            width: 44px; height: 44px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
-            cursor: pointer; backdrop-filter: blur(10px); transition: all 0.3s; font-size: 18px;
-        }
-        .cine-btn:hover { background: rgba(255,255,255,0.1); color: #fff; transform: scale(1.05); }
     </style>
 </head>
 <body>
-        <div class="spotlight" id="spotlight"></div>
+    <div class="spotlight" id="spotlight"></div>
     <div class="noise-bg"></div>
     <div class="blob blob-purple"></div>
     <div class="blob blob-cyan"></div>
 
     <nav>
-        <div class="logo">MY WEBSITE</div>
+        <div class="logo">FUN ZONE</div>
         <div class="nav-links" id="navAuthLinks">
             <button onclick="openModal('login')">Login</button>
             <button onclick="openModal('signup')">Sign Up</button>
@@ -263,64 +249,63 @@
 
     <main class="hero-section" id="hero">
         <h2>WELCOME TO</h2>
-        <h1>MY WEBSITE</h1>
+        <h1>FUN ZONE</h1>
         <p>Simple. Modern. Premium.</p>
 
         <div class="btn-container" id="heroBtnContainer">
             <button class="btn btn-login" onclick="openModal('login')">Login</button>
             <button class="btn btn-signup" onclick="openModal('signup')">Sign Up</button>
-            <button class="btn btn-photos" onclick="showPhotos()">
-                <i class="ph ph-image" style="font-size: 20px;"></i> Photos
-            </button>
         </div>
     </main>
 
-    <section class="photos-section" id="photos">
-        <button class="back-btn" onclick="showHome()">
-            <i class="ph ph-arrow-left"></i> Back to Home
-        </button>
-        <div class="gallery-grid">
-            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop"></div>
-            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=800&auto=format&fit=crop"></div>
-            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=800&auto=format&fit=crop"></div>
-            <div class="gallery-item"><img src="https://images.unsplash.com/photo-1604871000636-074fa5117945?q=80&w=800&auto=format&fit=crop"></div>
+    <section class="chat-dashboard" id="chatDashboard">
+        <div class="chat-container">
+            
+            <div class="chat-sidebar">
+                <div class="search-area">
+                    <input type="email" placeholder="Enter Gmail ID..." id="userSearchInput">
+                    <button class="search-btn" id="searchUserActionBtn" title="Search User">
+                        <i class="ph ph-magnifying-glass" style="font-size: 18px;"></i>
+                    </button>
+                </div>
+                
+                <div class="recent-list-title">Conversations</div>
+                <div class="chat-list" id="chatUsersList">
+                    </div>
+            </div>
+
+            <div class="chat-main-screen" id="chatMainScreen" style="display: none;">
+                <div class="chat-screen-header">
+                    <button class="mobile-back-btn" onclick="exitMobileChat()" title="Back to list">
+                        <i class="ph ph-arrow-left"></i>
+                    </button>
+                    <div class="user-avatar-mock" style="background: rgba(6, 182, 212, 0.15);"><i class="ph ph-user-circle"></i></div>
+                    <div class="active-user-info">
+                        <h3 id="activeChatName">---</h3>
+                        <p id="activeChatEmail">---</p>
+                    </div>
+                </div>
+
+                <div class="chat-messages-body" id="chatMessagesContainer">
+                    </div>
+
+                <div class="chat-screen-header chat-screen-footer">
+                    <input type="text" placeholder="Write a gorgeous message..." id="messageInputField">
+                    <button class="send-msg-btn" id="sendMessageActionBtn" title="Send Message">
+                        <i class="ph ph-paper-plane-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="chat-main-screen" id="chatPlaceholderScreen" style="display: flex;">
+                <div class="no-chat-placeholder">
+                    <i class="ph ph-chats-teardrop" style="font-size: 48px; color: rgba(255,255,255,0.1); margin-bottom: 12px; display:block;"></i>
+                    Search a Gmail to start conversations
+                </div>
+            </div>
+
         </div>
     </section>
-
-    <div class="cinematic-overlay" id="cineOverlay">
-        <div class="cine-gradient"></div>
-        <div class="abstract-shape shape-1"></div>
-        <div class="abstract-shape shape-2" style="--r:-20deg;"></div>
-        
-        <canvas id="particleCanvas"></canvas>
-
-        <div class="cine-controls">
-            <button class="cine-btn" id="audioToggleBtn" title="Toggle Ambient Music">
-                <i class="ph ph-speaker-slash" id="audioIcon"></i>
-            </button>
-            
-            <button class="cine-btn" onclick="skipToGrandFinale()" title="Skip Quotes" style="font-size: 13px; font-family: 'Inter', sans-serif; width: auto; padding: 0 18px; border-radius: 20px; font-weight: 500; color: #fff; background: rgba(255,255,255,0.06);">
-                Skip
-            </button>
-            
-            <button class="cine-btn" onclick="closeCinematicMode()" title="Exit Presentation">
-                <i class="ph ph-x"></i>
-            </button>
-        </div>
-
-        <div class="quote-wrapper" id="quoteWrapper">
-            <div class="quote-text cursor-blink" id="targetQuote"></div>
-            <div class="quote-author" id="targetAuthor"></div>
-        </div>
-
-        <div class="profile-card-grand" id="grandProfileCard">
-            <h4>CREATED BY</h4>
-            <h3>SHAILESH PRAJAPATI</h3>
-            <a href="https://instagram.com/shailesh_14_" target="_blank" class="insta-handle-link">
-                <i class="ph ph-instagram-logo" style="font-size: 22px;"></i> @shailesh_14_
-            </a>
-        </div>
-    </div>
 
     <div class="modal-overlay" id="authModal" onclick="closeModal(event)">
         <div class="auth-card" onclick="event.stopPropagation()">
@@ -331,20 +316,18 @@
         </div>
     </div>
 
-    <audio id="ambientMusic" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3"></audio>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { 
-            getAuth, 
-            createUserWithEmailAndPassword, 
-            signInWithEmailAndPassword, 
-            updateProfile, 
-            signInWithPopup, 
-            GoogleAuthProvider, 
-            signOut, 
-            onAuthStateChanged 
+            getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, 
+            updateProfile, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged 
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        
+        // Imported Firestore APIs elements safely 
+        import { 
+            getFirestore, doc, setDoc, getDocs, collection, query, where, 
+            addDoc, serverTimestamp, orderBy, onSnapshot 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyCJ75TKwCbpR-7Z0PUue-q1_NjgTaJ7Zro",
@@ -357,6 +340,7 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getFirestore(app);
         const googleProvider = new GoogleAuthProvider();
 
         const modal = document.getElementById('authModal');
@@ -365,40 +349,174 @@
         const heroBtnContainer = document.getElementById('heroBtnContainer');
         const closeModalBtn = document.getElementById('closeModalBtn');
 
-        onAuthStateChanged(auth, (user) => {
+        let currentUser = null;
+        let activeChatRoomId = null;
+        let activeChatUserUid = null;
+        let unsubscribeMessages = null;
+
+        // Authentication State Listener Setup
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
+                currentUser = user;
                 const displayName = user.displayName || "User";
                 navAuthLinks.innerHTML = `
                     <span class="user-greet">Hi, ${displayName}</span>
                     <button class="logout-btn" id="logoutAction">Logout</button>
                 `;
-                heroBtnContainer.innerHTML = `
-                    <button class="btn btn-photos" onclick="showPhotos()">
-                        <i class="ph ph-image" style="font-size: 20px;"></i> Photos
-                    </button>
-                `;
-                document.getElementById('logoutAction')?.addEventListener('click', () => signOut(auth));
+                
+                // 1. Sync logged-in user credentials to Firestore Database
+                await setDoc(doc(db, "users", user.uid), {
+                    uid: user.uid,
+                    name: displayName,
+                    email: user.email.toLowerCase()
+                }, { merge: true });
+
+                // 2. Adjust layouts seamlessly 
+                document.getElementById('hero').style.display = 'none';
+                document.getElementById('chatDashboard').style.display = 'block';
+                
+                // 3. Render list of users currently present
+                loadRegisteredUsersList();
+
+                document.getElementById('logoutAction')?.addEventListener('click', () => {
+                    signOut(auth);
+                    window.location.reload();
+                });
             } else {
+                currentUser = null;
                 navAuthLinks.innerHTML = `
                     <button id="navLoginBtn">Login</button>
                     <button id="navSignupBtn">Sign Up</button>
                 `;
-                heroBtnContainer.innerHTML = `
-                    <button class="btn btn-explore" onclick="startCinematicMode()">Explore</button>
-                    <button class="btn btn-login" id="heroLoginBtn">Login</button>
-                    <button class="btn btn-signup" id="heroSignupBtn">Sign Up</button>
-                    <button class="btn btn-photos" onclick="showPhotos()">
-                        <i class="ph ph-image" style="font-size: 20px;"></i> Photos
-                    </button>
-                `;
-                
                 document.getElementById('navLoginBtn')?.addEventListener('click', () => openModal('login'));
                 document.getElementById('navSignupBtn')?.addEventListener('click', () => openModal('signup'));
-                document.getElementById('heroLoginBtn')?.addEventListener('click', () => openModal('login'));
-                document.getElementById('heroSignupBtn')?.addEventListener('click', () => openModal('signup'));
             }
         });
 
+        // Load users from Firestore to build lists
+        async function loadRegisteredUsersList() {
+            const usersListContainer = document.getElementById('chatUsersList');
+            const q = collection(db, "users");
+            const querySnapshot = await getDocs(q);
+            
+            usersListContainer.innerHTML = '';
+            querySnapshot.forEach((docSnap) => {
+                const userData = docSnap.data();
+                if(userData.uid !== currentUser.uid) { // Don't list myself
+                    const userElement = document.createElement('div');
+                    userElement.className = `chat-user-item`;
+                    userElement.id = `user-item-${userData.uid}`;
+                    userElement.innerHTML = `
+                        <div class="user-avatar-mock"><i class="ph ph-user"></i></div>
+                        <div class="user-meta">
+                            <h4>${userData.name}</h4>
+                            <p>${userData.email}</p>
+                        </div>
+                    `;
+                    userElement.addEventListener('click', () => initiateChatConnection(userData));
+                    usersListContainer.appendChild(userElement);
+                }
+            });
+        }
+
+        // Search Engine Action implementation
+        document.getElementById('searchUserActionBtn').addEventListener('click', async () => {
+            const searchInput = document.getElementById('userSearchInput').value.trim().toLowerCase();
+            if(!searchInput) return;
+
+            const q = query(collection(db, "users"), where("email", "==", searchInput));
+            const querySnapshot = await getDocs(q);
+
+            if(!querySnapshot.empty) {
+                const targetUser = querySnapshot.docs[0].data();
+                if(targetUser.uid === currentUser.uid) { alert("You cannot search yourself!"); return; }
+                initiateChatConnection(targetUser);
+            } else {
+                alert("No user found with this Gmail ID!");
+            }
+        });
+
+        // Chat Room core link connection initialization
+        function initiateChatConnection(targetUser) {
+            // Remove previous active state styling structures
+            document.querySelectorAll('.chat-user-item').forEach(el => el.classList.remove('active'));
+            
+            const targetListItem = document.getElementById(`user-item-${targetUser.uid}`);
+            if(targetListItem) targetListItem.classList.add('active');
+
+            activeChatUserUid = targetUser.uid;
+            document.getElementById('activeChatName').textContent = targetUser.name;
+            document.getElementById('activeChatEmail').textContent = targetUser.email;
+
+            // Generate unique consistent Room ID alphabetically (uid1_uid2)
+            activeChatRoomId = currentUser.uid < targetUser.uid ? `${currentUser.uid}_${targetUser.uid}` : `${targetUser.uid}_${currentUser.uid}`;
+
+            // Handle UI Panel visibility shifts toggle switch
+            document.getElementById('chatPlaceholderScreen').style.display = 'none';
+            document.getElementById('chatMainScreen').style.display = 'flex';
+
+            // Mobile view trigger shift helper class toggle injection
+            document.getElementById('chatDashboard').classList.add('mobile-active');
+
+            // Listen to messages flowing into real-time scope streams
+            listenToRealtimeMessages(activeChatRoomId);
+        }
+
+        // Real-time Event Listener Stream connection binding wrapper
+        function listenToRealtimeMessages(roomId) {
+            if (unsubscribeMessages) unsubscribeMessages(); // Clean old listener hooks leaks
+
+            const msgContainer = document.getElementById('chatMessagesContainer');
+            const q = query(collection(db, "chats", roomId, "messages"), orderBy("timestamp", "asc"));
+
+            unsubscribeMessages = onSnapshot(q, (snapshot) => {
+                msgContainer.innerHTML = '';
+                if(snapshot.empty) {
+                    msgContainer.innerHTML = `<div class="no-chat-placeholder">End-to-End Secure. Type a message below...</div>`;
+                    return;
+                }
+                
+                snapshot.forEach((docSnap) => {
+                    const msgData = docSnap.data();
+                    const isSentByMe = msgData.senderId === currentUser.uid;
+                    
+                    const dateObj = msgData.timestamp ? msgData.timestamp.toDate() : new Date();
+                    const formattedTime = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                    const msgBubble = document.createElement('div');
+                    msgBubble.className = `msg-bubble ${isSentByMe ? 'sent' : 'received'}`;
+                    msgBubble.innerHTML = `${msgData.text} <span class="msg-time">${formattedTime}</span>`;
+                    msgContainer.appendChild(msgBubble);
+                });
+                // Automatic clean scrolling execution handler
+                msgContainer.scrollTop = msgContainer.scrollHeight;
+            });
+        }
+
+        // Messaging Transmit Delivery pipeline triggers logic code
+        async function sendChatMessage() {
+            const msgInput = document.getElementById('messageInputField');
+            const textMsg = msgInput.value.trim();
+            if(!textMsg || !activeChatRoomId) return;
+
+            msgInput.value = ''; // Instantly wipe viewport values logic fields cleanly
+
+            await addDoc(collection(db, "chats", activeChatRoomId, "messages"), {
+                text: textMsg,
+                senderId: currentUser.uid,
+                timestamp: serverTimestamp()
+            });
+        }
+
+        document.getElementById('sendMessageActionBtn').addEventListener('click', sendChatMessage);
+        document.getElementById('messageInputField').addEventListener('keypress', (e) => { if(e.key === 'Enter') sendChatMessage(); });
+
+        // Mobile View Exiter Hook
+        window.exitMobileChat = function() {
+            document.getElementById('chatDashboard').classList.remove('mobile-active');
+        }
+
+        // UI Auth Modal Setup
         window.openModal = function(type) {
             if(type === 'login') {
                 modalContent.innerHTML = `
@@ -430,7 +548,7 @@
 
         async function handleEmailSignup() {
             const name = document.getElementById('signName').value;
-            const email = document.getElementById('signEmail').value;
+            const email = document.getElementById('signEmail').value.toLowerCase();
             const password = document.getElementById('signPassword').value;
             if(!name || !email || !password) { alert("Please fill all fields!"); return; }
             try {
@@ -441,7 +559,7 @@
         }
 
         async function handleEmailLogin() {
-            const email = document.getElementById('loginEmail').value;
+            const email = document.getElementById('loginEmail').value.toLowerCase();
             const password = document.getElementById('loginPassword').value;
             if(!email || !password) { alert("Please fill all fields!"); return; }
             try { await signInWithEmailAndPassword(auth, email, password); modal.classList.remove('active'); } catch (error) { alert("Login Error: " + error.message); }
@@ -460,198 +578,7 @@
             spotlight.style.setProperty('--x', e.clientX + 'px');
             spotlight.style.setProperty('--y', e.clientY + 'px');
         });
-
-        const hero = document.getElementById('hero');
-        const photos = document.getElementById('photos');
-        window.showPhotos = function() { hero.style.display = 'none'; photos.style.display = 'block'; window.scrollTo({ top: 0 }); }
-        window.showHome = function() { photos.style.display = 'none'; hero.style.display = 'flex'; }
         window.closeModal = function(e) { if(e.target === document.getElementById('authModal')) authModal.classList.remove('active'); }
-
-        /* --- CINEMATIC QUOTES ENGINE GENERATOR --- */
-        const quotesList = [
-            { text: "The only place where success comes before work is in the dictionary.", author: "Vidal Sassoon" },
-            { text: "You don’t have to see the whole staircase, just take the first step.", author: "Martin Luther King Jr." },
-            { text: "Success is how high you bounce when you hit bottom.", author: "George S. Patton" },
-            { text: "The best time to plant a tree was 20 years ago. The second best time is now.", author: "Chinese Proverb" },
-            { text: "It always seems impossible until it’s done.", author: "Nelson Mandela" },
-            { text: "Do what you can, with what you have, where you are.", author: "Theodore Roosevelt" },
-            { text: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
-            { text: "Action breeds confidence and courage. If you want to conquer fear, do not sit at home and think about it.", author: "Dale Carnegie" },
-            { text: "We become what we think about.", author: "Earl Nightingale" },
-            { text: "Whatever the mind of man can conceive and believe, it can achieve.", author: "Napoleon Hill" }
-        ];
-
-        let currentQuoteIndex = 0;
-        let typewriterTimeout;
-        const cineOverlay = document.getElementById('cineOverlay');
-        const targetQuote = document.getElementById('targetQuote');
-        const targetAuthor = document.getElementById('targetAuthor');
-        const grandProfileCard = document.getElementById('grandProfileCard');
-        const quoteWrapper = document.getElementById('quoteWrapper');
-        
-        const audio = document.getElementById('ambientMusic');
-        const audioToggleBtn = document.getElementById('audioToggleBtn');
-        const audioIcon = document.getElementById('audioIcon');
-        let isMusicPlaying = false;
-
-        audioToggleBtn.addEventListener('click', () => {
-            if (isMusicPlaying) {
-                audio.pause();
-                audioIcon.className = "ph ph-speaker-slash";
-            } else {
-                audio.play().catch(e => console.log("Audio playing issue handled"));
-                audioIcon.className = "ph ph-speaker-high";
-            }
-            isMusicPlaying = !isMusicPlaying;
-        });
-
-        window.startCinematicMode = function() {
-            hero.style.transform = "scale(0.95)";
-            hero.style.opacity = "0";
-            
-            setTimeout(() => {
-                cineOverlay.classList.add('active');
-                currentQuoteIndex = 0;
-                grandProfileCard.className = "profile-card-grand"; // Reset styles completely
-                quoteWrapper.style.display = "block";
-                quoteWrapper.style.opacity = "1";
-                startParticleEngine();
-                if(isMusicPlaying) audio.play();
-                setTimeout(renderNextQuote, 800);
-            }, 400);
-        }
-
-        // GLITCH FIX LAYER 2: Ensure Instagram Card is brutally blocked on exit
-        window.closeCinematicMode = function() {
-            cineOverlay.classList.remove('active');
-            grandProfileCard.className = "profile-card-grand"; 
-            hero.style.transform = "scale(1)";
-            hero.style.opacity = "1";
-            clearTimeout(typewriterTimeout);
-            audio.pause();
-            isMusicPlaying = false;
-            audioIcon.className = "ph ph-speaker-slash";
-            stopParticleEngine();
-        }
-
-        // GLITCH FIX LAYER 3: Handle card render states seamlessly upon clicking Skip
-        window.skipToGrandFinale = function() {
-            clearTimeout(typewriterTimeout);
-            smoothDissolveQuote(() => {
-                quoteWrapper.style.display = "none";
-                grandProfileCard.classList.add('visible');
-            });
-        }
-
-        function renderNextQuote() {
-            if (currentQuoteIndex >= quotesList.length) {
-                smoothDissolveQuote(() => {
-                    quoteWrapper.style.display = "none";
-                    grandProfileCard.classList.add('visible');
-                });
-                return;
-            }
-
-            const currentQuote = quotesList[currentQuoteIndex];
-            targetAuthor.classList.remove('visible');
-            targetQuote.classList.add('cursor-blink');
-            
-            let charIndex = 0;
-            targetQuote.textContent = "";
-
-            function typeLetter() {
-                if (charIndex < currentQuote.text.length) {
-                    targetQuote.textContent += currentQuote.text.charAt(charIndex);
-                    charIndex++;
-                    typewriterTimeout = setTimeout(typeLetter, 45);
-                } else {
-                    targetQuote.classList.remove('cursor-blink');
-                    targetAuthor.textContent = `— ${currentQuote.author}`;
-                    targetAuthor.classList.add('visible');
-
-                    currentQuoteIndex++;
-                    typewriterTimeout = setTimeout(() => {
-                        smoothDissolveQuote(() => {
-                            setTimeout(renderNextQuote, 600);
-                        });
-                    }, 4000);
-                }
-            }
-            typeLetter();
-        }
-
-        function smoothDissolveQuote(callback) {
-            targetQuote.style.transition = "opacity 0.8s ease, transform 0.8s ease";
-            targetAuthor.style.transition = "opacity 0.8s ease";
-            targetQuote.style.opacity = "0";
-            targetQuote.style.transform = "translateY(-5px)";
-            targetAuthor.style.opacity = "0";
-
-            setTimeout(() => {
-                targetQuote.textContent = "";
-                targetAuthor.textContent = "";
-                targetQuote.style.opacity = "1";
-                targetQuote.style.transform = "translateY(0)";
-                targetQuote.style.transition = "none";
-                targetAuthor.style.transition = "opacity 0.8s ease";
-                callback();
-            }, 800);
-        }
-
-        const canvas = document.getElementById('particleCanvas');
-        const ctx = canvas.getContext('2d');
-        let animationFrameId;
-        let particlesArray = [];
-
-        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 1.5 + 0.5;
-                this.speedX = Math.random() * 0.2 - 0.1;
-                this.speedY = Math.random() * -0.4 - 0.1;
-                this.alpha = Math.random() * 0.5 + 0.2;
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.y < 0) { this.y = canvas.height; this.x = Math.random() * canvas.width; }
-                if (this.x < 0 || this.x > canvas.width) { this.x = Math.random() * canvas.width; }
-            }
-            draw() {
-                ctx.save();
-                ctx.globalAlpha = this.alpha;
-                ctx.fillStyle = '#06B6D4';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            }
-        }
-
-        function startParticleEngine() {
-            resizeCanvas();
-            window.addEventListener('resize', resizeCanvas);
-            particlesArray = [];
-            for (let i = 0; i < 65; i++) { particlesArray.push(new Particle()); }
-            
-            function animate() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                for (let i = 0; i < particlesArray.length; i++) {
-                    particlesArray[i].update();
-                    particlesArray[i].draw();
-                }
-                animationFrameId = requestAnimationFrame(animate);
-            }
-            animate();
-        }
-
-        function stopParticleEngine() {
-            cancelAnimationFrame(animationFrameId);
-            window.removeEventListener('resize', resizeCanvas);
-        }
     </script>
 </body>
 </html>
