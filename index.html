@@ -66,7 +66,7 @@
         /* --- Main Hero Section --- */
         .hero-section {
             height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; z-index: 10;
-            opacity: 1; transition: all 0.5s ease; will-change: transform, opacity;
+            opacity: 1; transition: all 0.3s ease; will-change: transform, opacity;
         }
         .hero-section h2 { font-size: 16px; font-weight: 400; letter-spacing: 6px; color: rgba(249, 250, 251, 0.5); margin-bottom: 12px; }
         .hero-section h1 {
@@ -176,7 +176,7 @@
         }
         .send-msg-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(6, 182, 212, 0.3); }
 
-        /* --- 📱 MOBILE VIEW OPTIMIZATION (ONLY CHAT SECTION) --- */
+        /* --- MOBILE VIEW OPTIMIZATION --- */
         @media (max-width: 768px) {
             .chat-dashboard { height: 80vh; margin: 90px auto 10px; width: 95%; }
             .chat-sidebar { width: 100%; border-right: none; }
@@ -184,7 +184,6 @@
                 position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
                 z-index: 60; display: none; background: #0A0A0A;
             }
-            /* When specific user chat is activated on mobile view state */
             .chat-dashboard.mobile-active .chat-sidebar { display: none; }
             .chat-dashboard.mobile-active .chat-main-screen { display: flex; }
             .mobile-back-btn { display: flex; }
@@ -270,8 +269,7 @@
                 </div>
                 
                 <div class="recent-list-title">Conversations</div>
-                <div class="chat-list" id="chatUsersList">
-                    </div>
+                <div class="chat-list" id="chatUsersList"></div>
             </div>
 
             <div class="chat-main-screen" id="chatMainScreen" style="display: none;">
@@ -286,8 +284,7 @@
                     </div>
                 </div>
 
-                <div class="chat-messages-body" id="chatMessagesContainer">
-                    </div>
+                <div class="chat-messages-body" id="chatMessagesContainer"></div>
 
                 <div class="chat-screen-header chat-screen-footer">
                     <input type="text" placeholder="Write a gorgeous message..." id="messageInputField">
@@ -323,7 +320,6 @@
             updateProfile, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged 
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         
-        // Imported Firestore APIs elements safely 
         import { 
             getFirestore, doc, setDoc, getDocs, collection, query, where, 
             addDoc, serverTimestamp, orderBy, onSnapshot 
@@ -346,7 +342,6 @@
         const modal = document.getElementById('authModal');
         const modalContent = document.getElementById('modalContent');
         const navAuthLinks = document.getElementById('navAuthLinks');
-        const heroBtnContainer = document.getElementById('heroBtnContainer');
         const closeModalBtn = document.getElementById('closeModalBtn');
 
         let currentUser = null;
@@ -354,7 +349,6 @@
         let activeChatUserUid = null;
         let unsubscribeMessages = null;
 
-        // Authentication State Listener Setup
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
@@ -364,24 +358,28 @@
                     <button class="logout-btn" id="logoutAction">Logout</button>
                 `;
                 
-                // 1. Sync logged-in user credentials to Firestore Database
-                await setDoc(doc(db, "users", user.uid), {
-                    uid: user.uid,
-                    name: displayName,
-                    email: user.email.toLowerCase()
-                }, { merge: true });
-
-                // 2. Adjust layouts seamlessly 
+                // 🚀 FIXED GLITCH: Sabse pehle UI change karo taaki website tute na
                 document.getElementById('hero').style.display = 'none';
                 document.getElementById('chatDashboard').style.display = 'block';
-                
-                // 3. Render list of users currently present
-                loadRegisteredUsersList();
 
                 document.getElementById('logoutAction')?.addEventListener('click', () => {
                     signOut(auth);
                     window.location.reload();
                 });
+
+                // Defensive background DB sync (Try-catch prevents breaking layout)
+                try {
+                    await setDoc(doc(db, "users", user.uid), {
+                        uid: user.uid,
+                        name: displayName,
+                        email: user.email.toLowerCase()
+                    }, { merge: true });
+
+                    loadRegisteredUsersList();
+                } catch (error) {
+                    console.error("Firestore Error: ", error);
+                    alert("Firestore Database standard connection issue. Please check your Firebase Console Firestore Rules settings!");
+                }
             } else {
                 currentUser = null;
                 navAuthLinks.innerHTML = `
@@ -390,55 +388,62 @@
                 `;
                 document.getElementById('navLoginBtn')?.addEventListener('click', () => openModal('login'));
                 document.getElementById('navSignupBtn')?.addEventListener('click', () => openModal('signup'));
+                
+                document.getElementById('hero').style.display = 'flex';
+                document.getElementById('chatDashboard').style.display = 'none';
             }
         });
 
-        // Load users from Firestore to build lists
         async function loadRegisteredUsersList() {
             const usersListContainer = document.getElementById('chatUsersList');
-            const q = collection(db, "users");
-            const querySnapshot = await getDocs(q);
-            
-            usersListContainer.innerHTML = '';
-            querySnapshot.forEach((docSnap) => {
-                const userData = docSnap.data();
-                if(userData.uid !== currentUser.uid) { // Don't list myself
-                    const userElement = document.createElement('div');
-                    userElement.className = `chat-user-item`;
-                    userElement.id = `user-item-${userData.uid}`;
-                    userElement.innerHTML = `
-                        <div class="user-avatar-mock"><i class="ph ph-user"></i></div>
-                        <div class="user-meta">
-                            <h4>${userData.name}</h4>
-                            <p>${userData.email}</p>
-                        </div>
-                    `;
-                    userElement.addEventListener('click', () => initiateChatConnection(userData));
-                    usersListContainer.appendChild(userElement);
-                }
-            });
+            try {
+                const q = collection(db, "users");
+                const querySnapshot = await getDocs(q);
+                
+                usersListContainer.innerHTML = '';
+                querySnapshot.forEach((docSnap) => {
+                    const userData = docSnap.data();
+                    if(userData.uid !== currentUser.uid) { 
+                        const userElement = document.createElement('div');
+                        userElement.className = `chat-user-item`;
+                        userElement.id = `user-item-${userData.uid}`;
+                        userElement.innerHTML = `
+                            <div class="user-avatar-mock"><i class="ph ph-user"></i></div>
+                            <div class="user-meta">
+                                <h4>${userData.name}</h4>
+                                <p>${userData.email}</p>
+                            </div>
+                        `;
+                        userElement.addEventListener('click', () => initiateChatConnection(userData));
+                        usersListContainer.appendChild(userElement);
+                    }
+                });
+            } catch (err) {
+                console.error("Failed loading list: ", err);
+            }
         }
 
-        // Search Engine Action implementation
         document.getElementById('searchUserActionBtn').addEventListener('click', async () => {
             const searchInput = document.getElementById('userSearchInput').value.trim().toLowerCase();
             if(!searchInput) return;
 
-            const q = query(collection(db, "users"), where("email", "==", searchInput));
-            const querySnapshot = await getDocs(q);
+            try {
+                const q = query(collection(db, "users"), where("email", "==", searchInput));
+                const querySnapshot = await getDocs(q);
 
-            if(!querySnapshot.empty) {
-                const targetUser = querySnapshot.docs[0].data();
-                if(targetUser.uid === currentUser.uid) { alert("You cannot search yourself!"); return; }
-                initiateChatConnection(targetUser);
-            } else {
-                alert("No user found with this Gmail ID!");
+                if(!querySnapshot.empty) {
+                    const targetUser = querySnapshot.docs[0].data();
+                    if(targetUser.uid === currentUser.uid) { alert("You cannot search yourself!"); return; }
+                    initiateChatConnection(targetUser);
+                } else {
+                    alert("No user found with this Gmail ID!");
+                }
+            } catch (err) {
+                alert("Search failed. Check your Firestore connection rules.");
             }
         });
 
-        // Chat Room core link connection initialization
         function initiateChatConnection(targetUser) {
-            // Remove previous active state styling structures
             document.querySelectorAll('.chat-user-item').forEach(el => el.classList.remove('active'));
             
             const targetListItem = document.getElementById(`user-item-${targetUser.uid}`);
@@ -448,23 +453,17 @@
             document.getElementById('activeChatName').textContent = targetUser.name;
             document.getElementById('activeChatEmail').textContent = targetUser.email;
 
-            // Generate unique consistent Room ID alphabetically (uid1_uid2)
             activeChatRoomId = currentUser.uid < targetUser.uid ? `${currentUser.uid}_${targetUser.uid}` : `${targetUser.uid}_${currentUser.uid}`;
 
-            // Handle UI Panel visibility shifts toggle switch
             document.getElementById('chatPlaceholderScreen').style.display = 'none';
             document.getElementById('chatMainScreen').style.display = 'flex';
-
-            // Mobile view trigger shift helper class toggle injection
             document.getElementById('chatDashboard').classList.add('mobile-active');
 
-            // Listen to messages flowing into real-time scope streams
             listenToRealtimeMessages(activeChatRoomId);
         }
 
-        // Real-time Event Listener Stream connection binding wrapper
         function listenToRealtimeMessages(roomId) {
-            if (unsubscribeMessages) unsubscribeMessages(); // Clean old listener hooks leaks
+            if (unsubscribeMessages) unsubscribeMessages(); 
 
             const msgContainer = document.getElementById('chatMessagesContainer');
             const q = query(collection(db, "chats", roomId, "messages"), orderBy("timestamp", "asc"));
@@ -472,7 +471,7 @@
             unsubscribeMessages = onSnapshot(q, (snapshot) => {
                 msgContainer.innerHTML = '';
                 if(snapshot.empty) {
-                    msgContainer.innerHTML = `<div class="no-chat-placeholder">End-to-End Secure. Type a message below...</div>`;
+                    msgContainer.innerHTML = `<div class="no-chat-placeholder">Type a message below to start chatting securely...</div>`;
                     return;
                 }
                 
@@ -488,35 +487,37 @@
                     msgBubble.innerHTML = `${msgData.text} <span class="msg-time">${formattedTime}</span>`;
                     msgContainer.appendChild(msgBubble);
                 });
-                // Automatic clean scrolling execution handler
                 msgContainer.scrollTop = msgContainer.scrollHeight;
+            }, (error) => {
+                console.error("Snapshot error: ", error);
             });
         }
 
-        // Messaging Transmit Delivery pipeline triggers logic code
         async function sendChatMessage() {
             const msgInput = document.getElementById('messageInputField');
             const textMsg = msgInput.value.trim();
             if(!textMsg || !activeChatRoomId) return;
 
-            msgInput.value = ''; // Instantly wipe viewport values logic fields cleanly
+            msgInput.value = ''; 
 
-            await addDoc(collection(db, "chats", activeChatRoomId, "messages"), {
-                text: textMsg,
-                senderId: currentUser.uid,
-                timestamp: serverTimestamp()
-            });
+            try {
+                await addDoc(collection(db, "chats", activeChatRoomId, "messages"), {
+                    text: textMsg,
+                    senderId: currentUser.uid,
+                    timestamp: serverTimestamp()
+                });
+            } catch (err) {
+                alert("Failed to send message. Check Firestore rules configuration.");
+            }
         }
 
         document.getElementById('sendMessageActionBtn').addEventListener('click', sendChatMessage);
         document.getElementById('messageInputField').addEventListener('keypress', (e) => { if(e.key === 'Enter') sendChatMessage(); });
 
-        // Mobile View Exiter Hook
         window.exitMobileChat = function() {
             document.getElementById('chatDashboard').classList.remove('mobile-active');
         }
 
-        // UI Auth Modal Setup
         window.openModal = function(type) {
             if(type === 'login') {
                 modalContent.innerHTML = `
