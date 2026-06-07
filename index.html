@@ -56,6 +56,12 @@
             position: fixed; top: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 20px 5%;
             background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--glass-border); z-index: 100;
         }
+        .logo-container { display: flex; align-items: center; }
+        .menu-toggle-btn {
+            background: none; border: none; color: var(--text-white); font-size: 24px; cursor: pointer; display: none; margin-right: 18px; transition: color 0.25s;
+        }
+        .menu-toggle-btn:hover { color: var(--cyan-accent); }
+        
         .logo { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 22px; letter-spacing: 2px; background: linear-gradient(to right, #fff, rgba(255,255,255,0.7)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .nav-links { display: flex; gap: 20px; align-items: center; }
         .nav-links button, .user-greet { background: none; border: none; color: rgba(249, 250, 251, 0.7); font-size: 14px; font-weight: 500; cursor: pointer; transition: color 0.3s; }
@@ -63,7 +69,31 @@
         .user-greet { color: var(--cyan-accent); cursor: default; font-weight: 400; }
         .logout-btn { color: #ef4444 !important; }
 
-        /* --- Main Hero Section --- */
+        /* --- SLIDE NAVIGATION PROFILE DRAWER --- */
+        .nav-drawer {
+            position: fixed; top: 0; left: -300px; width: 280px; height: 100vh;
+            background: rgba(10, 10, 10, 0.85); border-right: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            z-index: 999; padding: 30px 20px; display: flex; flex-direction: column;
+            transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 20px 0 50px rgba(0,0,0,0.8);
+        }
+        .nav-drawer.active { left: 0; }
+        .close-drawer-btn { align-self: flex-end; background: none; border: none; color: rgba(255,255,255,0.4); font-size: 24px; cursor: pointer; transition: color 0.25s; margin-bottom: 25px; }
+        .close-drawer-btn:hover { color: white; }
+
+        .drawer-profile-section {
+            background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 20px; padding: 24px 16px; text-align: center;
+        }
+        .drawer-avatar {
+            width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, var(--purple-glow), var(--cyan-accent));
+            display: flex; justify-content: center; align-items: center; margin: 0 auto 16px; color: white; font-size: 26px; font-weight: 600; box-shadow: 0 0 25px rgba(6, 182, 212, 0.25);
+        }
+        .drawer-profile-section h4 { font-size: 11px; color: var(--cyan-accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; font-weight: 600; }
+        .drawer-username { font-family: 'Poppins', sans-serif; font-size: 17px; font-weight: 600; color: white; margin-bottom: 4px; }
+        .drawer-email { font-size: 13px; color: rgba(255,255,255,0.4); word-break: break-all; }
+
+        /* --- Main Hero Section (Logged Out State) --- */
         .hero-section {
             height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; z-index: 10;
             opacity: 1; transition: all 0.3s ease; will-change: transform, opacity;
@@ -75,6 +105,18 @@
         }
         .hero-section p { font-size: 1.2rem; font-weight: 300; letter-spacing: 1px; color: rgba(249, 250, 251, 0.6); margin-bottom: 50px; }
 
+        /* --- PREMIUM WELCOME DASHBOARD SCREEN --- */
+        .welcome-dashboard {
+            display: none; height: 100vh; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; z-index: 10;
+            opacity: 1; transition: all 0.4s ease;
+        }
+        .welcome-dashboard h2 { font-size: 14px; font-weight: 500; letter-spacing: 5px; color: var(--cyan-accent); margin-bottom: 12px; text-transform: uppercase; }
+        .welcome-dashboard h1 {
+            font-family: 'Poppins', sans-serif; font-size: 4.5rem; font-weight: 800; letter-spacing: -1px;
+            background: linear-gradient(135deg, #fff, rgba(255,255,255,0.55)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 15px; line-height: 1.1;
+        }
+        .welcome-dashboard p { font-size: 1.1rem; font-weight: 300; color: rgba(249, 250, 251, 0.5); margin-bottom: 45px; letter-spacing: 0.5px; }
+
         /* --- Buttons --- */
         .btn-container { display: flex; gap: 20px; align-items: center; justify-content: center; flex-wrap: wrap; position: relative; z-index: 25; }
         .btn { padding: 14px 36px; border-radius: 50px; font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; transition: all 0.25s ease; display: flex; align-items: center; gap: 8px; border: none; will-change: transform; }
@@ -85,6 +127,18 @@
         .btn-signup { background: linear-gradient(135deg, var(--purple-glow), var(--cyan-accent)); color: white; box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3); }
         .btn-signup:hover { box-shadow: 0 15px 40px rgba(6, 182, 212, 0.4); transform: translateY(-2px); }
 
+        .btn-launch-chat {
+            background: linear-gradient(135deg, var(--purple-glow), var(--cyan-accent)); color: white; padding: 16px 44px; font-size: 16px; font-weight: 600; border-radius: 50px;
+            box-shadow: 0 10px 35px rgba(124, 58, 237, 0.3); animation: pulseGlow 2.5s infinite ease-in-out;
+        }
+        .btn-launch-chat:hover { transform: translateY(-3px); box-shadow: 0 15px 45px rgba(6, 182, 212, 0.5); }
+        
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3); }
+            50% { box-shadow: 0 10px 40px rgba(6, 182, 212, 0.6); transform: scale(1.01); }
+            100% { box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3); }
+        }
+
         /* --- CHAT INTERFACE --- */
         .chat-dashboard {
             display: none;
@@ -94,8 +148,6 @@
             z-index: 50; position: relative; overflow: hidden; box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
             animation: chatFadeIn 0.5s ease forwards;
         }
-        @keyframes chatFadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-
         .chat-container { display: flex; height: 100%; position: relative; }
 
         /* Left Panel - Sidebar */
@@ -117,7 +169,7 @@
         .chat-list { flex: 1; overflow-y: auto; padding: 10px; }
         
         .chat-user-item {
-            display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 16px; cursor: pointer; transition: all 0.25s; margin-bottom: 6px; border: 1px solid transparent;
+            display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 16px; cursor: pointer; transition: all 0.25s; margin-bottom: 6px; border: 1px solid transparent; position: relative;
         }
         .chat-user-item:hover { background: rgba(255, 255, 255, 0.03); }
         .chat-user-item.active { background: rgba(6, 182, 212, 0.06); border-color: rgba(6, 182, 212, 0.15); }
@@ -127,9 +179,17 @@
             display: flex; justify-content: center; align-items: center; color: var(--cyan-accent); font-size: 20px; flex-shrink: 0;
         }
         .chat-user-item.active .user-avatar-mock { color: #fff; background: var(--cyan-accent); }
-        .user-meta { text-align: left; }
+        .user-meta { text-align: left; flex: 1; }
         .user-meta h4 { font-size: 14px; font-weight: 500; margin-bottom: 2px; color: #fff; }
-        .user-meta p { font-size: 12px; color: rgba(255,255,255,0.4); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 180px; }
+        .user-meta p { font-size: 12px; color: rgba(255,255,255,0.4); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 140px; }
+
+        /* 🔢 DYNAMIC CHAT BADGE PILL DESIGN */
+        .unread-badge {
+            background: linear-gradient(135deg, var(--cyan-accent), var(--purple-glow));
+            color: white; font-size: 11px; font-weight: 600; min-width: 20px; height: 20px;
+            border-radius: 50%; display: none; align-items: center; justify-content: center;
+            padding: 0 5px; box-shadow: 0 0 15px rgba(6, 182, 212, 0.4); margin-left: auto;
+        }
 
         /* Right Panel - Active Chat Screen */
         .chat-main-screen { width: 68%; display: flex; flex-direction: column; background: rgba(0,0,0,0.05); transition: all 0.3s ease;}
@@ -177,7 +237,7 @@
         }
         .send-msg-btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(6, 182, 212, 0.3); }
 
-        /* --- 📱 MOBILE OPTIMIZATION OVERRIDES --- */
+        /* --- 📱 MOBILE VIEW OPTIMIZATION --- */
         @media (max-width: 768px) {
             .chat-dashboard { height: 80vh; margin: 90px auto 10px; width: 95%; }
             .chat-sidebar { width: 100% !important; border-right: none; display: flex !important; }
@@ -191,6 +251,8 @@
             .chat-dashboard.mobile-active #chatMainScreen { display: flex !important; }
             .mobile-back-btn { display: flex; }
             .msg-bubble { max-width: 80%; }
+            
+            .welcome-dashboard h1 { font-size: 3rem; }
         }
 
         /* --- Auth Modal --- */
@@ -241,8 +303,25 @@
     <div class="blob blob-purple"></div>
     <div class="blob blob-cyan"></div>
 
+    <div class="nav-drawer" id="navDrawer">
+        <button class="close-drawer-btn" onclick="toggleNavDrawer()" title="Close Profile Menu">
+            <i class="ph ph-x"></i>
+        </button>
+        <div class="drawer-profile-section">
+            <h4>Your Profile</h4>
+            <div class="drawer-avatar" id="drawerAvatarIcon"><i class="ph ph-user"></i></div>
+            <div class="drawer-username" id="drawerProfileName">---</div>
+            <div class="drawer-email" id="drawerProfileEmail">---</div>
+        </div>
+    </div>
+
     <nav>
-        <div class="logo">FUN ZONE</div>
+        <div class="logo-container">
+            <button class="menu-toggle-btn" id="menuToggleBtn" onclick="toggleNavDrawer()" title="Open Profile Drawer">
+                <i class="ph ph-list"></i>
+            </button>
+            <div class="logo">FUN ZONE</div>
+        </div>
         <div class="nav-links" id="navAuthLinks">
             <button onclick="openModal('login')">Login</button>
             <button onclick="openModal('signup')">Sign Up</button>
@@ -259,6 +338,15 @@
             <button class="btn btn-signup" onclick="openModal('signup')">Sign Up</button>
         </div>
     </main>
+
+    <section class="welcome-dashboard" id="welcomeDashboard">
+        <h2>Dashboard</h2>
+        <h1 id="welcomeUserGreeting">Hello, User!</h1>
+        <p>Your premium custom zone is fully active and ready.</p>
+        <button class="btn btn-launch-chat" onclick="launchChatInterface()">
+            <i class="ph ph-chats-teardrop" style="font-size: 22px;"></i> Launch FUN CHAT
+        </button>
+    </section>
 
     <section class="chat-dashboard" id="chatDashboard">
         <div class="chat-container">
@@ -325,7 +413,7 @@
         
         import { 
             getFirestore, doc, setDoc, getDocs, collection, query, where, 
-            addDoc, serverTimestamp, orderBy, onSnapshot 
+            addDoc, serverTimestamp, orderBy, onSnapshot, increment 
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -351,6 +439,8 @@
         let activeChatRoomId = null;
         let activeChatUserUid = null;
         let unsubscribeMessages = null;
+        let unsubscribeRooms = null;
+        const localUnreadTracker = {}; // Tracks unread state changes to trigger chime audio
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -361,8 +451,15 @@
                     <button class="logout-btn" id="logoutAction">Logout</button>
                 `;
                 
+                document.getElementById('drawerProfileName').textContent = displayName;
+                document.getElementById('drawerProfileEmail').textContent = user.email;
+                document.getElementById('drawerAvatarIcon').textContent = displayName.charAt(0).toUpperCase();
+                document.getElementById('menuToggleBtn').style.display = 'block';
+
                 document.getElementById('hero').style.display = 'none';
-                document.getElementById('chatDashboard').style.display = 'block';
+                document.getElementById('chatDashboard').style.display = 'none';
+                document.getElementById('welcomeDashboard').style.display = 'flex';
+                document.getElementById('welcomeUserGreeting').textContent = `Hello, ${displayName}!`;
 
                 document.getElementById('logoutAction')?.addEventListener('click', () => {
                     signOut(auth);
@@ -377,11 +474,13 @@
                     }, { merge: true });
 
                     loadRegisteredUsersList();
+                    listenToGlobalRoomsUnread(); // Starts the Badge & Chime Listener
                 } catch (error) {
                     console.error("Firestore Sync Fail: ", error);
                 }
             } else {
                 currentUser = null;
+                if(unsubscribeRooms) unsubscribeRooms();
                 navAuthLinks.innerHTML = `
                     <button id="navLoginBtn">Login</button>
                     <button id="navSignupBtn">Sign Up</button>
@@ -389,10 +488,83 @@
                 document.getElementById('navLoginBtn')?.addEventListener('click', () => openModal('login'));
                 document.getElementById('navSignupBtn')?.addEventListener('click', () => openModal('signup'));
                 
+                document.getElementById('menuToggleBtn').style.display = 'none';
+                document.getElementById('navDrawer').classList.remove('active');
                 document.getElementById('hero').style.display = 'flex';
                 document.getElementById('chatDashboard').style.display = 'none';
+                document.getElementById('welcomeDashboard').style.display = 'none';
             }
         });
+
+        // 🔔 REAL-TIME IN-APP CHIME AND UNREAD BADGE QUERY LISTENER
+        function listenToGlobalRoomsUnread() {
+            if(unsubscribeRooms) unsubscribeRooms();
+
+            unsubscribeRooms = onSnapshot(collection(db, "rooms"), (snapshot) => {
+                snapshot.forEach((roomDoc) => {
+                    const roomId = roomDoc.id;
+                    const roomData = roomDoc.data();
+
+                    // Process only if the logged-in user is a participant in this room setup
+                    if (roomId.includes(currentUser.uid)) {
+                        const uids = roomId.split('_');
+                        const otherUid = uids[0] === currentUser.uid ? uids[1] : uids[0];
+                        
+                        const myUnreadKey = `unread_${currentUser.uid}`;
+                        const unreadCount = roomData[myUnreadKey] || 0;
+
+                        // 🔢 Update Badge UI state
+                        const badgeEl = document.getElementById(`badge-${otherUid}`);
+                        if(badgeEl) {
+                            if(unreadCount > 0) {
+                                badgeEl.textContent = unreadCount;
+                                badgeEl.style.display = 'flex';
+                            } else {
+                                badgeEl.style.display = 'none';
+                            }
+                        }
+
+                        // 🔔 Audio Chime Trigger logic condition check
+                        const previousCount = localUnreadTracker[roomId] || 0;
+                        if (roomData.lastSender !== currentUser.uid && unreadCount > previousCount) {
+                            playNotificationChime();
+                        }
+                        localUnreadTracker[roomId] = unreadCount;
+                    }
+                });
+            });
+        }
+
+        // 🎵 CORE GENERATIVE SYNTH AUDIO NOTIFICATION METHOD (No external broken URLs)
+        function playNotificationChime() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // First melodic tone pitch layer
+                const osc1 = audioCtx.createOscillator();
+                const gain1 = audioCtx.createGain();
+                osc1.type = 'sine';
+                osc1.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5 Note
+                gain1.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain1.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+                osc1.connect(gain1); gain1.connect(audioCtx.destination);
+                osc1.start(); osc1.stop(audioCtx.currentTime + 0.35);
+                
+                // Second interlocking harmonized offset note
+                setTimeout(() => {
+                    const osc2 = audioCtx.createOscillator();
+                    const gain2 = audioCtx.createGain();
+                    osc2.type = 'sine';
+                    osc2.frequency.setValueAtTime(880.00, audioCtx.currentTime); // A5 Note
+                    gain2.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    gain2.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+                    osc2.connect(gain2); gain2.connect(audioCtx.destination);
+                    osc2.start(); osc2.stop(audioCtx.currentTime + 0.35);
+                }, 75);
+            } catch (e) {
+                console.log("Audio pipeline sound block handled: ", e);
+            }
+        }
 
         async function loadRegisteredUsersList() {
             const usersListContainer = document.getElementById('chatUsersList');
@@ -413,6 +585,7 @@
                                 <h4>${userData.name}</h4>
                                 <p>${userData.email}</p>
                             </div>
+                            <div class="unread-badge" id="badge-${userData.uid}">0</div>
                         `;
                         userElement.addEventListener('click', () => initiateChatConnection(userData));
                         usersListContainer.appendChild(userElement);
@@ -443,7 +616,7 @@
             }
         });
 
-        function initiateChatConnection(targetUser) {
+        async function initiateChatConnection(targetUser) {
             document.querySelectorAll('.chat-user-item').forEach(el => el.classList.remove('active'));
             
             const targetListItem = document.getElementById(`user-item-${targetUser.uid}`);
@@ -458,6 +631,13 @@
             document.getElementById('chatPlaceholderScreen').style.display = 'none';
             document.getElementById('chatMainScreen').style.display = 'flex';
             document.getElementById('chatDashboard').classList.add('mobile-active');
+
+            // 🚀 Reset unread badge value to 0 inside database when opening chat room
+            try {
+                await setDoc(doc(db, "rooms", activeChatRoomId), {
+                    [`unread_${currentUser.uid}`]: 0
+                }, { merge: true });
+            } catch(e) { console.error(e); }
 
             listenToRealtimeMessages(activeChatRoomId);
         }
@@ -488,6 +668,11 @@
                     msgContainer.appendChild(msgBubble);
                 });
                 msgContainer.scrollTop = msgContainer.scrollHeight;
+
+                // Keeps resetting unread values back to zero as long as window remains active
+                if(activeChatRoomId === roomId) {
+                    setDoc(doc(db, "rooms", roomId), { [`unread_${currentUser.uid}`]: 0 }, { merge: true });
+                }
             });
         }
 
@@ -499,11 +684,20 @@
             msgInput.value = ''; 
 
             try {
+                // 1. Add Message Document
                 await addDoc(collection(db, "chats", activeChatRoomId, "messages"), {
                     text: textMsg,
                     senderId: currentUser.uid,
                     timestamp: serverTimestamp()
                 });
+
+                // 2. Increment Unread count value target metadata atomically
+                await setDoc(doc(db, "rooms", activeChatRoomId), {
+                    [`unread_${activeChatUserUid}`]: increment(1),
+                    lastSender: currentUser.uid,
+                    timestamp: serverTimestamp()
+                }, { merge: true });
+
             } catch (err) {
                 console.error(err);
             }
@@ -515,6 +709,16 @@
         window.exitMobileChat = function() {
             document.getElementById('chatDashboard').classList.remove('mobile-active');
         }
+
+        window.toggleNavDrawer = function() {
+            document.getElementById('navDrawer').classList.toggle('active');
+        }
+
+        window.navigatorChatLaunch = function() {
+            document.getElementById('welcomeDashboard').style.display = 'none';
+            document.getElementById('chatDashboard').style.display = 'block';
+        }
+        window.launchChatInterface = window.navigatorChatLaunch; // Legacy binder alias mapping support
 
         window.openModal = function(type) {
             if(type === 'login') {
