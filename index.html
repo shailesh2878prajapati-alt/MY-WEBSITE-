@@ -11,7 +11,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght=600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <style>
@@ -342,9 +342,14 @@
         <h1>FUN ZONE</h1>
         <p>Simple. Modern. Premium.</p>
 
+        <!-- 📱 UPDATED BUTTON CONTAINER WITH DOWNLOAD APK BUTTON -->
         <div class="btn-container" id="heroBtnContainer">
             <button class="btn btn-login" onclick="openModal('login')">Login</button>
-            <button class="btn btn-signup" onclick="openModal('signup')">Sign Up</button>
+            
+            <!-- Premium Android Download Button -->
+            <a href="./funzone.apk" download class="btn" style="background: linear-gradient(135deg, #22C55E, #06B6D4); color: white; box-shadow: 0 10px 30px rgba(34, 197, 94, 0.35); text-decoration: none; font-weight: 600;">
+                <i class="ph ph-android-logo" style="font-size: 22px;"></i> Download Android App
+            </a>
         </div>
     </main>
 
