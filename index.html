@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FUN ZONE - Premium Chat</title>
     
+    <!-- 📱 PWA Manifest Link -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#7C3AED">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght=600;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
@@ -180,7 +186,7 @@
         }
         .chat-user-item.active .user-avatar-mock { color: #fff; background: var(--cyan-accent); }
         .user-meta { text-align: left; flex: 1; }
-        .user-meta h4 { font-size: 14px; font-weight: 500; margin-bottom: 2px; color: #fff; }
+        .user-meta h4 { font-size: 14px; font-weight: 500; margin-bottom: 2px; color: #fff; text-align: left;}
         .user-meta p { font-size: 12px; color: rgba(255,255,255,0.4); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 140px; }
 
         /* 🔢 DYNAMIC CHAT BADGE PILL DESIGN */
@@ -303,6 +309,7 @@
     <div class="blob blob-purple"></div>
     <div class="blob blob-cyan"></div>
 
+    <!-- ☰ LEFT SLIDE OUT NAVIGATION SIDEBAR DRAWER -->
     <div class="nav-drawer" id="navDrawer">
         <button class="close-drawer-btn" onclick="toggleNavDrawer()" title="Close Profile Menu">
             <i class="ph ph-x"></i>
@@ -315,6 +322,7 @@
         </div>
     </div>
 
+    <!-- Header Navbar Section -->
     <nav>
         <div class="logo-container">
             <button class="menu-toggle-btn" id="menuToggleBtn" onclick="toggleNavDrawer()" title="Open Profile Drawer">
@@ -328,6 +336,7 @@
         </div>
     </nav>
 
+    <!-- Main Landing Hero View (Logged Out) -->
     <main class="hero-section" id="hero">
         <h2>WELCOME TO</h2>
         <h1>FUN ZONE</h1>
@@ -339,6 +348,7 @@
         </div>
     </main>
 
+    <!-- PREMIUM LOGGED IN WELCOME DASHBOARD SCREEN -->
     <section class="welcome-dashboard" id="welcomeDashboard">
         <h2>Dashboard</h2>
         <h1 id="welcomeUserGreeting">Hello, User!</h1>
@@ -348,9 +358,11 @@
         </button>
     </section>
 
+    <!-- REAL-TIME CHAT DASHBOARD PANEL -->
     <section class="chat-dashboard" id="chatDashboard">
         <div class="chat-container">
             
+            <!-- LEFT AREA: Search and Recent Users List -->
             <div class="chat-sidebar">
                 <div class="search-area">
                     <input type="email" placeholder="Enter Gmail ID..." id="userSearchInput">
@@ -363,6 +375,7 @@
                 <div class="chat-list" id="chatUsersList"></div>
             </div>
 
+            <!-- RIGHT AREA: Active Conversational Box Window -->
             <div class="chat-main-screen" id="chatMainScreen" style="display: none;">
                 <div class="chat-screen-header">
                     <button class="mobile-back-btn" onclick="exitMobileChat()" title="Back to list">
@@ -385,6 +398,7 @@
                 </div>
             </div>
 
+            <!-- Blank Screen Initial State Placeholder Box -->
             <div class="chat-main-screen" id="chatPlaceholderScreen" style="display: flex;">
                 <div class="no-chat-placeholder">
                     <i class="ph ph-chats-teardrop" style="font-size: 48px; color: rgba(255,255,255,0.1); margin-bottom: 12px; display:block;"></i>
@@ -395,6 +409,7 @@
         </div>
     </section>
 
+    <!-- Modal Form Windows -->
     <div class="modal-overlay" id="authModal" onclick="closeModal(event)">
         <div class="auth-card" onclick="event.stopPropagation()">
             <button class="close-modal" id="closeModalBtn">
@@ -404,6 +419,7 @@
         </div>
     </div>
 
+    <!-- 🔥 FIREBASE & FIRESTORE REAL-TIME DATABASE ENGINE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { 
@@ -440,7 +456,7 @@
         let activeChatUserUid = null;
         let unsubscribeMessages = null;
         let unsubscribeRooms = null;
-        const localUnreadTracker = {}; // Tracks unread state changes to trigger chime audio
+        const localUnreadTracker = {}; 
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -474,7 +490,7 @@
                     }, { merge: true });
 
                     loadRegisteredUsersList();
-                    listenToGlobalRoomsUnread(); // Starts the Badge & Chime Listener
+                    listenToGlobalRoomsUnread(); 
                 } catch (error) {
                     console.error("Firestore Sync Fail: ", error);
                 }
@@ -496,7 +512,6 @@
             }
         });
 
-        // 🔔 REAL-TIME IN-APP CHIME AND UNREAD BADGE QUERY LISTENER
         function listenToGlobalRoomsUnread() {
             if(unsubscribeRooms) unsubscribeRooms();
 
@@ -505,7 +520,6 @@
                     const roomId = roomDoc.id;
                     const roomData = roomDoc.data();
 
-                    // Process only if the logged-in user is a participant in this room setup
                     if (roomId.includes(currentUser.uid)) {
                         const uids = roomId.split('_');
                         const otherUid = uids[0] === currentUser.uid ? uids[1] : uids[0];
@@ -513,7 +527,6 @@
                         const myUnreadKey = `unread_${currentUser.uid}`;
                         const unreadCount = roomData[myUnreadKey] || 0;
 
-                        // 🔢 Update Badge UI state
                         const badgeEl = document.getElementById(`badge-${otherUid}`);
                         if(badgeEl) {
                             if(unreadCount > 0) {
@@ -524,7 +537,6 @@
                             }
                         }
 
-                        // 🔔 Audio Chime Trigger logic condition check
                         const previousCount = localUnreadTracker[roomId] || 0;
                         if (roomData.lastSender !== currentUser.uid && unreadCount > previousCount) {
                             playNotificationChime();
@@ -535,34 +547,31 @@
             });
         }
 
-        // 🎵 CORE GENERATIVE SYNTH AUDIO NOTIFICATION METHOD (No external broken URLs)
         function playNotificationChime() {
             try {
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 
-                // First melodic tone pitch layer
                 const osc1 = audioCtx.createOscillator();
                 const gain1 = audioCtx.createGain();
                 osc1.type = 'sine';
-                osc1.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5 Note
+                osc1.frequency.setValueAtTime(587.33, audioCtx.currentTime); 
                 gain1.gain.setValueAtTime(0.08, audioCtx.currentTime);
                 gain1.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
                 osc1.connect(gain1); gain1.connect(audioCtx.destination);
                 osc1.start(); osc1.stop(audioCtx.currentTime + 0.35);
                 
-                // Second interlocking harmonized offset note
                 setTimeout(() => {
                     const osc2 = audioCtx.createOscillator();
                     const gain2 = audioCtx.createGain();
                     osc2.type = 'sine';
-                    osc2.frequency.setValueAtTime(880.00, audioCtx.currentTime); // A5 Note
+                    osc2.frequency.setValueAtTime(880.00, audioCtx.currentTime); 
                     gain2.gain.setValueAtTime(0.08, audioCtx.currentTime);
                     gain2.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
                     osc2.connect(gain2); gain2.connect(audioCtx.destination);
                     osc2.start(); osc2.stop(audioCtx.currentTime + 0.35);
                 }, 75);
             } catch (e) {
-                console.log("Audio pipeline sound block handled: ", e);
+                console.log("Audio block handled: ", e);
             }
         }
 
@@ -632,7 +641,6 @@
             document.getElementById('chatMainScreen').style.display = 'flex';
             document.getElementById('chatDashboard').classList.add('mobile-active');
 
-            // 🚀 Reset unread badge value to 0 inside database when opening chat room
             try {
                 await setDoc(doc(db, "rooms", activeChatRoomId), {
                     [`unread_${currentUser.uid}`]: 0
@@ -669,7 +677,6 @@
                 });
                 msgContainer.scrollTop = msgContainer.scrollHeight;
 
-                // Keeps resetting unread values back to zero as long as window remains active
                 if(activeChatRoomId === roomId) {
                     setDoc(doc(db, "rooms", roomId), { [`unread_${currentUser.uid}`]: 0 }, { merge: true });
                 }
@@ -684,14 +691,12 @@
             msgInput.value = ''; 
 
             try {
-                // 1. Add Message Document
                 await addDoc(collection(db, "chats", activeChatRoomId, "messages"), {
                     text: textMsg,
                     senderId: currentUser.uid,
                     timestamp: serverTimestamp()
                 });
 
-                // 2. Increment Unread count value target metadata atomically
                 await setDoc(doc(db, "rooms", activeChatRoomId), {
                     [`unread_${activeChatUserUid}`]: increment(1),
                     lastSender: currentUser.uid,
@@ -718,7 +723,7 @@
             document.getElementById('welcomeDashboard').style.display = 'none';
             document.getElementById('chatDashboard').style.display = 'block';
         }
-        window.launchChatInterface = window.navigatorChatLaunch; // Legacy binder alias mapping support
+        window.launchChatInterface = window.navigatorChatLaunch; 
 
         window.openModal = function(type) {
             if(type === 'login') {
@@ -773,6 +778,15 @@
         }
 
         closeModalBtn.addEventListener('click', () => modal.classList.remove('active'));
+        
+        // 🚀 AUTOMATIC PWA SERVICE WORKER REGISTRATION BOOTSTRAP PIPELINE
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('FUN ZONE PWA Service Worker Registered Setup Live'))
+                    .catch(err => console.error('PWA Service Worker Registration Failed: ', err));
+            });
+        }
     </script>
 
     <script>
