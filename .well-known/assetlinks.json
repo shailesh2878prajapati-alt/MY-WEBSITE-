@@ -1,0 +1,9 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.shailesh2878prajapati_alt.twa",
+        "sha256_cert_fingerprints": ["05:82:5D:F3:7A:43:87:84:8F:A9:5B:A5:0D:7F:14:D7:24:46:6F:FE:A7:5A:D1:BD:53:EF:F4:36:22:E6:5A:C2"]
+      }
+    }]
+
