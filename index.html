@@ -182,12 +182,19 @@
         
         .user-avatar-mock {
             width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border);
-            display: flex; justify-content: center; align-items: center; color: var(--cyan-accent); font-size: 20px; flex-shrink: 0;
+            display: flex; justify-content: center; align-items: center; color: var(--cyan-accent); font-size: 20px; flex-shrink: 0; position: relative;
         }
         .chat-user-item.active .user-avatar-mock { color: #fff; background: var(--cyan-accent); }
         .user-meta { text-align: left; flex: 1; }
         .user-meta h4 { font-size: 14px; font-weight: 500; margin-bottom: 2px; color: #fff; text-align: left;}
         .user-meta p { font-size: 12px; color: rgba(255,255,255,0.4); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 140px; }
+
+        /* 🟢 REAL-TIME STATUS BADGE POINT INDICATORS */
+        .status-dot-indicator {
+            position: absolute; bottom: 1px; right: 1px; width: 11px; height: 11px; border-radius: 50%;
+            background: #9ca3af; border: 2px solid #0A0A0A; display: block;
+        }
+        .status-dot-indicator.online { background: #22c55e !important; box-shadow: 0 0 10px rgba(34,197,94,0.6); }
 
         /* 🔢 DYNAMIC CHAT BADGE PILL DESIGN */
         .unread-badge {
@@ -205,7 +212,11 @@
         }
         .active-user-info { text-align: left; }
         .active-user-info h3 { font-size: 16px; font-weight: 600; letter-spacing: 0.5px; }
-        .active-user-info p { font-size: 12px; color: var(--cyan-accent); opacity: 0.8; }
+        .active-user-info p { font-size: 12px; color: rgba(255,255,255,0.4); }
+        .active-user-info p.status-highlight { color: var(--cyan-accent); font-weight: 500; }
+        .active-user-info p.typing-highlight { color: #22c55e; font-weight: 600; animation: flashTyping 1.4s infinite ease-in-out; }
+
+        @keyframes flashTyping { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
 
         .mobile-back-btn {
             display: none; background: none; border: none; color: white; font-size: 22px; cursor: pointer; align-items: center; justify-content: center; margin-right: 5px;
@@ -301,6 +312,13 @@
             color: white; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 14px; cursor: pointer; transition: all 0.25s;
         }
         .google-btn:hover { background: rgba(255,255,255,0.08); }
+
+        /* 📱 APP KE ANDAR DOWNLOAD BUTTON KO CHUPANE KE LIYE */
+        @media (display-mode: standalone) {
+            #downloadApkBtn {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -347,7 +365,7 @@
             <button class="btn btn-login" onclick="openModal('login')">Login</button>
             
             <!-- Premium Android Download Button -->
-            <a href="./funzone.apk" download class="btn" style="background: linear-gradient(135deg, #22C55E, #06B6D4); color: white; box-shadow: 0 10px 30px rgba(34, 197, 94, 0.35); text-decoration: none; font-weight: 600;">
+            <a href="./funzone.apk" download id="downloadApkBtn" class="btn" style="background: linear-gradient(135deg, #22C55E, #06B6D4); color: white; box-shadow: 0 10px 30px rgba(34, 197, 94, 0.35); text-decoration: none; font-weight: 600;">
                 <i class="ph ph-android-logo" style="font-size: 22px;"></i> Download Android App
             </a>
         </div>
@@ -461,6 +479,9 @@
         let activeChatUserUid = null;
         let unsubscribeMessages = null;
         let unsubscribeRooms = null;
+        let unsubscribeActiveUserStatus = null;
+        let unsubscribeActiveRoomTyping = null;
+        let typingTimeout = null;
         const localUnreadTracker = {}; 
 
         onAuthStateChanged(auth, async (user) => {
@@ -482,19 +503,26 @@
                 document.getElementById('welcomeDashboard').style.display = 'flex';
                 document.getElementById('welcomeUserGreeting').textContent = `Hello, ${displayName}!`;
 
-                document.getElementById('logoutAction')?.addEventListener('click', () => {
+                document.getElementById('logoutAction')?.addEventListener('click', async () => {
+                    if (currentUser) {
+                        await setDoc(doc(db, "users", currentUser.uid), { status: "offline", lastSeen: serverTimestamp() }, { merge: true });
+                    }
                     signOut(auth);
                     window.location.reload();
                 });
 
                 try {
+                    // Update online lifecycle state seamlessly
                     await setDoc(doc(db, "users", user.uid), {
                         uid: user.uid,
                         name: displayName,
-                        email: user.email.toLowerCase().trim()
+                        email: user.email.toLowerCase().trim(),
+                        status: "online",
+                        lastSeen: serverTimestamp()
                     }, { merge: true });
 
-                    loadRegisteredUsersList();
+                    setupUserPresenceLifecycle();
+                    listenToRegisteredUsersRealtime();
                     listenToGlobalRoomsUnread(); 
                 } catch (error) {
                     console.error("Firestore Sync Fail: ", error);
@@ -516,6 +544,18 @@
                 document.getElementById('welcomeDashboard').style.display = 'none';
             }
         });
+
+        // 🟢 PRESETS FOR APP USER ONLINE STATUS & SYSTEM LIFECYCLE PRESENCE
+        function setupUserPresenceLifecycle() {
+            document.addEventListener('visibilitychange', () => {
+                if (!currentUser) return;
+                const statusStr = document.visibilityState === 'visible' ? "online" : "offline";
+                setDoc(doc(db, "users", currentUser.uid), {
+                    status: statusStr,
+                    lastSeen: serverTimestamp()
+                }, { merge: true });
+            });
+        }
 
         function listenToGlobalRoomsUnread() {
             if(unsubscribeRooms) unsubscribeRooms();
@@ -580,24 +620,43 @@
             }
         }
 
-        async function loadRegisteredUsersList() {
-            const usersListContainer = document.getElementById('chatUsersList');
+        // Helper to cleanly parse last seen text descriptions
+        function formatLastSeenText(userData) {
+            if (userData.status === 'online') return 'Online';
+            if (!userData.lastSeen) return 'Offline';
             try {
-                const q = collection(db, "users");
-                const querySnapshot = await getDocs(q);
-                
+                const d = userData.lastSeen.toDate();
+                return `Last seen at ${d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+            } catch(e) {
+                return 'Offline';
+            }
+        }
+
+        // 🔄 LISTEN TO ALL REGISTERED USERS LIST IN REAL-TIME (Online states sync instantly)
+        function listenToRegisteredUsersRealtime() {
+            const usersListContainer = document.getElementById('chatUsersList');
+            onSnapshot(collection(db, "users"), (querySnapshot) => {
+                // Keep selected element tracking safe
+                const activeId = activeChatUserUid;
                 usersListContainer.innerHTML = '';
+                
                 querySnapshot.forEach((docSnap) => {
                     const userData = docSnap.data();
                     if(userData.uid !== currentUser.uid) { 
+                        const isOnline = userData.status === 'online';
+                        const statusLabelText = formatLastSeenText(userData);
+
                         const userElement = document.createElement('div');
-                        userElement.className = `chat-user-item`;
+                        userElement.className = `chat-user-item ${activeId === userData.uid ? 'active' : ''}`;
                         userElement.id = `user-item-${userData.uid}`;
                         userElement.innerHTML = `
-                            <div class="user-avatar-mock"><i class="ph ph-user"></i></div>
+                            <div class="user-avatar-mock">
+                                <i class="ph ph-user"></i>
+                                <div class="status-dot-indicator ${isOnline ? 'online' : ''}"></div>
+                            </div>
                             <div class="user-meta">
                                 <h4>${userData.name}</h4>
-                                <p>${userData.email}</p>
+                                <p>${statusLabelText}</p>
                             </div>
                             <div class="unread-badge" id="badge-${userData.uid}">0</div>
                         `;
@@ -605,9 +664,7 @@
                         usersListContainer.appendChild(userElement);
                     }
                 });
-            } catch (err) {
-                console.error(err);
-            }
+            });
         }
 
         document.getElementById('searchUserActionBtn').addEventListener('click', async () => {
@@ -632,15 +689,13 @@
 
         async function initiateChatConnection(targetUser) {
             document.querySelectorAll('.chat-user-item').forEach(el => el.classList.remove('active'));
-            
             const targetListItem = document.getElementById(`user-item-${targetUser.uid}`);
             if(targetListItem) targetListItem.classList.add('active');
 
             activeChatUserUid = targetUser.uid;
-            document.getElementById('activeChatName').textContent = targetUser.name;
-            document.getElementById('activeChatEmail').textContent = targetUser.email;
-
             activeChatRoomId = currentUser.uid < targetUser.uid ? `${currentUser.uid}_${targetUser.uid}` : `${targetUser.uid}_${currentUser.uid}`;
+
+            document.getElementById('activeChatName').textContent = targetUser.name;
 
             document.getElementById('chatPlaceholderScreen').style.display = 'none';
             document.getElementById('chatMainScreen').style.display = 'flex';
@@ -652,7 +707,55 @@
                 }, { merge: true });
             } catch(e) { console.error(e); }
 
+            // ✍️ Dynamic real-time listening parameters for Online status & typing hooks
+            setupHeaderStatusRealtimeSync(targetUser.uid, activeChatRoomId);
             listenToRealtimeMessages(activeChatRoomId);
+        }
+
+        // 🟢 REAL-TIME WORKER TO MERGE ONLINE STATE AND TYPING STATUS INDICATORS IN CHAT HEADER
+        function setupHeaderStatusRealtimeSync(targetUserUid, roomId) {
+            if(unsubscribeActiveUserStatus) unsubscribeActiveUserStatus();
+            if(unsubscribeActiveRoomTyping) unsubscribeActiveRoomTyping();
+
+            const statusHeaderSubtext = document.getElementById('activeChatEmail');
+
+            // 1. Listen to typing states
+            unsubscribeActiveRoomTyping = onSnapshot(doc(db, "rooms", roomId), (roomDoc) => {
+                const roomData = roomDoc.data();
+                const isTyping = roomData ? roomData[`typing_${targetUserUid}`] === true : false;
+
+                if (isTyping) {
+                    statusHeaderSubtext.textContent = "typing...";
+                    statusHeaderSubtext.className = "typing-highlight";
+                } else {
+                    // Fallback back to standard base status check snapshot tracking
+                    statusHeaderSubtext.className = "";
+                    fetchAndRenderStaticHeaderStatus(targetUserUid);
+                }
+            });
+
+            // 2. Listen to user status snapshot updates
+            unsubscribeActiveUserStatus = onSnapshot(doc(db, "users", targetUserUid), (userDoc) => {
+                if (statusHeaderSubtext.className !== "typing-highlight") {
+                    const userData = userDoc.data();
+                    if (userData) {
+                        statusHeaderSubtext.textContent = formatLastSeenText(userData);
+                        if (userData.status === 'online') statusHeaderSubtext.classList.add('status-highlight');
+                        else statusHeaderSubtext.classList.remove('status-highlight');
+                    }
+                }
+            });
+        }
+
+        async function fetchAndRenderStaticHeaderStatus(targetUserUid) {
+            const statusHeaderSubtext = document.getElementById('activeChatEmail');
+            if (statusHeaderSubtext.className === "typing-highlight") return;
+            const snap = await getDocs(query(collection(db, "users"), where("uid", "==", targetUserUid)));
+            if(!snap.empty) {
+                const userData = snap.docs[0].data();
+                statusHeaderSubtext.textContent = formatLastSeenText(userData);
+                if (userData.status === 'online') statusHeaderSubtext.className = "status-highlight";
+            }
         }
 
         function listenToRealtimeMessages(roomId) {
@@ -688,12 +791,34 @@
             });
         }
 
+        // ✍️ TYPING PIPELINE HOOKS CAPTURE DETECTOR
+        document.getElementById('messageInputField').addEventListener('input', () => {
+            if (!currentUser || !activeChatRoomId) return;
+
+            // Trigger typing state to database instantly
+            setDoc(doc(db, "rooms", activeChatRoomId), {
+                [`typing_${currentUser.uid}`]: true
+            }, { merge: true });
+
+            // Debounce mechanism resetter
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(() => {
+                setDoc(doc(db, "rooms", activeChatRoomId), {
+                    [`typing_${currentUser.uid}`]: false
+                }, { merge: true });
+            }, 1800); // Stop flag resets smoothly after 1.8 seconds of complete stillness
+        });
+
         async function sendChatMessage() {
             const msgInput = document.getElementById('messageInputField');
             const textMsg = msgInput.value.trim();
             if(!textMsg || !activeChatRoomId) return;
 
             msgInput.value = ''; 
+            
+            // Clear current input typing hooks manually right when message shoots out
+            clearTimeout(typingTimeout);
+            setDoc(doc(db, "rooms", activeChatRoomId), { [`typing_${currentUser.uid}`]: false }, { merge: true });
 
             try {
                 await addDoc(collection(db, "chats", activeChatRoomId, "messages"), {
